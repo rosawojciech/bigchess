@@ -17,6 +17,7 @@ utils::globalVariables(c("Result"))
 #' @param big.mode boolean (default FALSE) used in read.pgn.ff function
 #' @param quiet boolean (default FALSE), indicating if messages should appear.
 #' @param ignore.other.games boolean (default FALSE) if TRUE result is subset of original dataset without games with result marked as "*", i.e. ongoing games
+#' @param source.movetext boolean (default FALSE, experimental!) if TRUE column with original movetext will be added
 #' @return Data frame containg STR, additional tags (conditionally), Movetext, NMoves (conditionally), extracted moves (conditionally) with complete.movetext flag, figure moves count statistics (conditionally).
 #'
 #' @examples
@@ -49,7 +50,7 @@ utils::globalVariables(c("Result"))
 #'result <- rbind(result,read.pgn(paste0(i,"/pgn")))}
 #' @importFrom utils head tail
 #' @export
-read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.move = T,stat.moves = T,big.mode = F,quiet = F,ignore.other.games = F){
+read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.move = T,stat.moves = T,big.mode = F,quiet = F,ignore.other.games = F,source.movetext = F){
   st <- Sys.time()
   tags <- c(c("Event","Site","Date","Round","White","Black","Result"),add.tags)
   if(big.mode) al = con
@@ -65,12 +66,14 @@ read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.mo
   tmp1[!tmp3] <- "Movetext"
   r2 <- data.frame(tmp1,tmp2,tmp3,tmp4,stringsAsFactors = F)
   gt <- paste(subset(r2,tmp1=="Movetext",select = c(tmp2))[,1],collapse = " ")
+  if(source.movetext) gt2 <- gt
   gt <- gsub("{[^}]+}","",gt,perl = T) #remove comments
   gt <- gsub("\\([^\\)]+\\)","",gt,perl = T) #remove variants
   gt <- gsub("[\\?\\!]","",gt,perl = T) # remove ?! chars
   gt <- gsub("[0-9]+\\.\\.\\.","",gt,perl = T)
   for(i in c("1-0","1\\/2-1\\/2","0-1","\\*"))
     gt <- unlist(strsplit(gt,split = i))
+  if(source.movetext) for(i in c("1-0","1\\/2-1\\/2","0-1","\\*")) gt2 <- unlist(strsplit(gt2,split = i))
   r <- subset(r2,tmp1 == "Event",select = c(tmp4,tmp2))
   colnames(r) <- c("GID","Event")
   #tags <- c("Event","Site","Date","Round","White","Black","Result")
@@ -80,6 +83,7 @@ read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.mo
     r <- merge(r,tmp,all.x = T)
   }
   r$Movetext <- trimws(gsub("[[:space:]]+"," ",head(gt,nrow(r))))
+  if(source.movetext) r$SourceMovetext  <- head(gt2,nrow(r))
   tal <- tail(al,1) # check if scanning ended properly
   # otherwise mark last movetext as empty
   if(big.mode) if(!grepl("\\[",tal)&!(tal=="")) {
@@ -115,5 +119,6 @@ read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.mo
   r <- droplevels(r)
   for(i in intersect(colnames(r),c("WhiteElo","BlackElo","SetUp")))
     r[,i] <- as.integer(r[,i])
+
   return(r[,-1])
 }

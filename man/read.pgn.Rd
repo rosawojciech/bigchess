@@ -6,7 +6,7 @@
 \usage{
 read.pgn(con, add.tags = NULL, n.moves = T, extract.moves = 10,
   last.move = T, stat.moves = T, big.mode = F, quiet = F,
-  ignore.other.games = F)
+  ignore.other.games = F, source.movetext = F)
 }
 \arguments{
 \item{con}{connection argument passed directly to readLines() function. String - the name of the file which the data are to be read from or connection object or URL.}
@@ -31,6 +31,8 @@ Most popular: "WhiteElo", "BlackElo","ECO","SetUp" or "FEN". Case sensitive.}
 \item{quiet}{boolean (default FALSE), indicating if messages should appear.}
 
 \item{ignore.other.games}{boolean (default FALSE) if TRUE result is subset of original dataset without games with result marked as "*", i.e. ongoing games}
+
+\item{source.movetext}{boolean (default FALSE, experimental!) if TRUE column with original movetext will be added}
 }
 \value{
 Data frame containg STR, additional tags (conditionally), Movetext, NMoves (conditionally), extracted moves (conditionally) with complete.movetext flag, figure moves count statistics (conditionally).
