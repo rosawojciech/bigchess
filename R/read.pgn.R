@@ -66,6 +66,8 @@ read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.mo
   r2 <- data.frame(tmp1,tmp2,tmp3,tmp4,stringsAsFactors = F)
   gt <- paste(subset(r2,tmp1=="Movetext",select = c(tmp2))[,1],collapse = " ")
   gt <- gsub("{[^}]+}","",gt,perl = T) #remove comments
+  gt <- gsub("\\([^\\)]+\\)","",gt,perl = T) #remove variants
+  gt <- gsub("[\\?\\!]","",gt,perl = T) # remove ?! chars
   gt <- gsub("[0-9]+\\.\\.\\.","",gt,perl = T)
   for(i in c("1-0","1\\/2-1\\/2","0-1","\\*"))
     gt <- unlist(strsplit(gt,split = i))
@@ -77,7 +79,7 @@ read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.mo
     colnames(tmp) <- c("GID",i)
     r <- merge(r,tmp,all.x = T)
   }
-  r$Movetext <- trimws(gsub("  "," ",head(gt,nrow(r))))
+  r$Movetext <- trimws(gsub("[[:space:]]+"," ",head(gt,nrow(r))))
   tal <- tail(al,1) # check if scanning ended properly
   # otherwise mark last movetext as empty
   if(big.mode) if(!grepl("\\[",tal)&!(tal=="")) {
