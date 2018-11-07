@@ -45,4 +45,10 @@ con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"r",enc
 # con <- file("path_to_big_chess_file.pgn","r",encoding = "latin1")
 fdf <- read.pgn.ff(con)
 delete(fdf)}
+\donttest{
+# Windows (example of zipped file handling)
+unzf <- unzip("zipped_pgn_file.zip")
+fdf <- read.pgn.ff(file(unzf,"rb"))
+delete(fdf)
+}
 }
