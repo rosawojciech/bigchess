@@ -28,7 +28,7 @@ extract_moves <- function(movetext,N = 10,last.move = T){
   colnames(r) <- paste0(rep(c("W","B"),times = N),rep(1:N,each = 2))
   rownames(r) <- NULL
   cmplt <- substr(trimws(gsub("  "," ",movetext)),1,3)
-  if(last.move) r$last.move <- sapply(sx,function(i) tail(i,n = 1))
+  if(last.move) r$last.move <- vapply(sx,function(i) {if(length(i)>1) return(tail(i,n = 1)) else return("")},character(1))
   r$complete.movetext <- substr(cmplt,1,2)=="1." & substr(cmplt,2,3)!=".."
   r[!r$complete.movetext,-ncol(r)] <- NA
   return(r)
