@@ -27,7 +27,7 @@
 #' fdf <- read.pgn.ff(con)
 #' delete(fdf)}
 #'\donttest{
-#' # Linux ('r' opening mode for loop over readLines):
+#' # Linux/Mac OS X ('r' opening mode for loop over readLines):
 #' con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"r",encoding = "latin1")
 #' # con <- file("path_to_big_chess_file.pgn","r",encoding = "latin1")
 #' fdf <- read.pgn.ff(con)
