@@ -37,7 +37,13 @@ browse_opening <- function(df,movetext = ""){
     move = paste0("W",ncemo/2+1)
   }
   }
-  tr <- tree_move(r,move)
-  plot_tree_move(tr,main = paste(opening,"\n N = ",sum(tr$N)))
-  return(tr)
+  if(nrow(r)>0){
+    tr <- tree_move(r,move)
+    plot_tree_move(tr,main = paste(opening,"\n N = ",sum(tr$N)))
+    return(tr)
+  }
+  else{
+    message("No openings found in data frame")
+    return(data.frame())
+  }
 }
