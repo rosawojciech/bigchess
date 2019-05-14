@@ -61,16 +61,17 @@ read.pgn <- function(con,add.tags = NULL,n.moves = T, extract.moves = 10,last.mo
   s <- "^\\[([\\S]+)\\s\"([\\S\\s]+|\\B)\"\\]$"
   tmp1 <- gsub(s,"\\1",al,perl = T)
   tmp2 <- gsub(s,"\\2",al, perl = T)
-  tmp3 <- grepl("^\\[",al,perl = T)
+  tmp3 <- grepl("^\\[[^%]+\\]$",al,perl = T)
   tmp4 <- cumsum(grepl("\\[Event ",al))
   tmp1[!tmp3] <- "Movetext"
   r2 <- data.frame(tmp1,tmp2,tmp3,tmp4,stringsAsFactors = F)
   gt <- paste(subset(r2,tmp1=="Movetext",select = c(tmp2))[,1],collapse = " ")
   if(source.movetext) gt2 <- gt
   gt <- gsub("{[^}]+}","",gt,perl = T) #remove comments
-  gt <- gsub("\\([^\\)]+\\)","",gt,perl = T) #remove variants
+  gt <- gsub("\\((?>[^()]|(?R))*\\)","",gt,perl = T) #remove variants (Recursive Annotation Variation)
   gt <- gsub("[\\?\\!]","",gt,perl = T) # remove ?! chars
   gt <- gsub("[0-9]+\\.\\.\\.","",gt,perl = T)
+  gt <- gsub("\\$[0-9]+","",gt,perl = T) # remove NAG and SAN suffix
   for(i in c("1-0","1\\/2-1\\/2","0-1","\\*"))
     gt <- unlist(strsplit(gt,split = i))
   if(source.movetext) for(i in c("1-0","1\\/2-1\\/2","0-1","\\*")) gt2 <- unlist(strsplit(gt2,split = i))
