@@ -9,7 +9,7 @@ uci_parse(ucilog, filter = "bestmove")
 \arguments{
 \item{ucilog}{strings from uci_quit() or uci_read()$temp}
 
-\item{filter}{string default 'bestmove' (currently only this value is available)}
+\item{filter}{string, one of 'bestmove' (default), 'score' or 'bestline'}
 }
 \value{
 strings with parsed information from engine

@@ -3,7 +3,7 @@
 #' Parse GUI commands from chess engine.
 #'
 #' @param ucilog strings from uci_quit() or uci_read()$temp
-#' @param filter string default 'bestmove' (currently only this value is available)
+#' @param filter string, one of 'bestmove' (default), 'score' or 'bestline'
 #' @return strings with parsed information from engine
 #'
 #' @examples
@@ -21,9 +21,20 @@
 #' uci_engine(engine_path) %>% uci_go(depth = 10) %>% uci_quit() %>% uci_parse()}
 #' @export
 uci_parse <- function(ucilog,filter = "bestmove"){
-  rslt <- ucilog[grepl(filter,ucilog)]
   if(filter == "bestmove"){
+    rslt <- ucilog[grepl(filter,ucilog)]
     rslt <- gsub("bestmove ","",rslt)
-    return(gsub(" ponder [a-z0-9]+","",rslt))
+    up <- gsub(" ponder [a-z0-9]+","",rslt)
   }
+  if(filter == "score"){
+    m <- gregexpr("score cp((?:\\s|\\s\\-)[0-9]+)",ucilog)
+    rslt <- as.integer(gsub("score cp ", " ",unlist(regmatches(ucilog,m))))
+    up <- tail(rslt,n=1)
+  }
+  if(filter == "bestline"){
+    m <- gregexpr(" pv [a-z0-9 ]+",ucilog)
+    rslt <- gsub(" pv ", "",unlist(regmatches(ucilog,m)))
+    up <- tail(rslt,n=1)
+  }
+  return(up)
 }
