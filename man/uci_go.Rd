@@ -44,7 +44,9 @@ uci_quit(e)
 require(magrittr)
 uci_engine(engine_path) \%>\% uci_go(depth = 10) \%>\% uci_quit()
 # Find best answer for black after 1. e4 in 100 seconds:
-uci_engine(engine_path) \%>\% uci_position(moves = "e2e4") \%>\% uci_go(depth = 20) \%>\% uci_quit() \%>\% uci_parse()
+uci_engine(engine_path) \%>\% uci_position(moves = "e2e4") \%>\%
+  uci_go(depth = 20) \%>\% uci_quit() \%>\% uci_parse()
 # Find best answer for black after 1. e4 in 100 seconds:
-uci_engine(engine_path) \%>\% uci_position(moves = "e2e4") \%>\% uci_go(infinite = TRUE,stoptime = 100) \%>\% uci_quit() \%>\% uci_parse()}
+uci_engine(engine_path) \%>\% uci_position(moves = "e2e4") \%>\%
+  uci_go(infinite = TRUE,stoptime = 100) \%>\% uci_quit() \%>\% uci_parse()}
 }

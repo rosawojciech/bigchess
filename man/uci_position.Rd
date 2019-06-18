@@ -34,5 +34,6 @@ e <- uci_go(depth = 10)
 uci_quit(e)
 # Using pipe '\%>\%' from magrittr:
 require(magrittr)
-uci_engine(engine_path) \%>\% uci_position(moves = "e2e4") \%>\% uci_go(depth = 10) \%>\% uci_quit() \%>\% uci_parse()}
+uci_engine(engine_path) \%>\% uci_position(moves = "e2e4") \%>\%
+  uci_go(depth = 10) \%>\% uci_quit() \%>\% uci_parse()}
 }

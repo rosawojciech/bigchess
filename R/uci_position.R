@@ -19,7 +19,8 @@
 #' uci_quit(e)
 #' # Using pipe '%>%' from magrittr:
 #' require(magrittr)
-#' uci_engine(engine_path) %>% uci_position(moves = "e2e4") %>% uci_go(depth = 10) %>% uci_quit() %>% uci_parse()}
+#' uci_engine(engine_path) %>% uci_position(moves = "e2e4") %>%
+#'   uci_go(depth = 10) %>% uci_quit() %>% uci_parse()}
 #' @export
 uci_position <- function(engine,moves = NULL,startpos = TRUE,fen = NULL ){
   if(startpos & is.null(fen)) uci_cmd(engine,paste("position startpos moves",moves))
