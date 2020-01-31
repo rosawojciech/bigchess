@@ -40,8 +40,12 @@ ap$curpos_lan
 ap$curpos_san
 # "1. e4"
 ap$bestline_san
-# "e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7 6. Re1 d6 7. Nxd4 Ne5 8. Bb3 O-O 9. Nc3 c5 10. Nf5 Bxf5 11. exf5 c4 12. Ba4 a6 13. Qe2"
+# "e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7
+# 6. Re1 d6 7. Nxd4 Ne5 8. Bb3 O-O 9. Nc3 c5
+# 10. Nf5 Bxf5 11. exf5 c4 12. Ba4 a6 13. Qe2"
 ap$bestline_lan
-# "e7e5 g1f3 b8c6 d2d4 e5d4 f1c4 g8f6 e1g1 f8e7 f1e1 d7d6 f3d4 c6e5 c4b3 e8g8 b1c3 c7c5 d4f5 c8f5 e4f5 c5c4 b3a4 a7a6 d1e2"
+# "e7e5 g1f3 b8c6 d2d4 e5d4 f1c4 g8f6 e1g1 f8e7
+# f1e1 d7d6 f3d4 c6e5 c4b3 e8g8 b1c3 c7c5 d4f5
+# c8f5 e4f5 c5c4 b3a4 a7a6 d1e2"
 }
 }
