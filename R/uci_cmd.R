@@ -18,8 +18,8 @@
 #' require(magrittr)
 #' uci_engine(engine_path) %>% uci_command("go depth 10") %>% uci_quit()}
 #' @export
-#' @importFrom subprocess process_write
 uci_cmd <- function(engine, command = ""){
-  process_write(engine$pipe,paste0(command,"\n"))
+  #process_write(engine$pipe,paste0(command,"\n")) # subprocess
+  engine$pipe$write_input(paste0(command,"\n"))
   return(engine)
 }

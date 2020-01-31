@@ -18,10 +18,11 @@
 #' require(magrittr)
 #' uci_engine(engine_path) %>% uci_quit()}
 #' @export
-#' @importFrom subprocess spawn_process
+#' @importFrom processx process
 uci_engine <- function(path){
   engine <- list()
-  engine$pipe <- spawn_process(path)
+  #engine$pipe <- spawn_process(path) #subprocess package
+  engine$pipe <- process$new(command = path,stdout = "|",stdin = "|")
   engine$temp <- character(0)
   return(uci_isready(engine))
 }
