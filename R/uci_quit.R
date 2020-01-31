@@ -17,10 +17,11 @@
 #' require(magrittr)
 #' uci_engine(engine_path) %>% uci_quit()}
 #' @export
-#' @importFrom subprocess process_close_input
 uci_quit <- function(engine){
   uci_cmd(engine,"quit")
-  process_close_input(engine$pipe)
+  # process_close_input(engine$pipe) #subprocess
+
   rslt <- uci_read(engine)$temp
+  engine$pipe$kill()
   return(rslt)
 }

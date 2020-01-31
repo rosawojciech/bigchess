@@ -4,9 +4,18 @@
 \alias{read.pgn}
 \title{Reads PGN files into data frame}
 \usage{
-read.pgn(con, add.tags = NULL, n.moves = T, extract.moves = 10,
-  last.move = T, stat.moves = T, big.mode = F, quiet = F,
-  ignore.other.games = F, source.movetext = F)
+read.pgn(
+  con,
+  add.tags = NULL,
+  n.moves = T,
+  extract.moves = 10,
+  last.move = T,
+  stat.moves = T,
+  big.mode = F,
+  quiet = F,
+  ignore.other.games = F,
+  source.movetext = F
+)
 }
 \arguments{
 \item{con}{connection argument passed directly to readLines() function. String - the name of the file which the data are to be read from or connection object or URL.}

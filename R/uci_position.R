@@ -14,8 +14,8 @@
 #' # Windows
 #' # engine_path <- "./stockfish_10_x64.exe"
 #' e <- uci_engine(engine_path)
-#' e <- uci_position(moves = "e2e4")
-#' e <- uci_go(depth = 10)
+#' e <- uci_position(e,moves = "e2e4")
+#' e <- uci_go(e,depth = 10)
 #' uci_quit(e)
 #' # Using pipe '%>%' from magrittr:
 #' require(magrittr)

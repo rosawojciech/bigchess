@@ -16,9 +16,9 @@
 #' e$temp
 #' uci_quit(e)}
 #' @export
-#' @importFrom subprocess process_read
 uci_read <- function(engine){
-  prs <- process_read(engine$pipe)$stdout
+  #prs <- process_read(engine$pipe)$stdout subprocess
+  prs <- engine$pipe$read_output_lines()
   if(length(prs)>0) engine$temp <- c(engine$temp,prs)
   return(engine)
 }

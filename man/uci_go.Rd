@@ -4,8 +4,16 @@
 \alias{uci_go}
 \title{Sending command go for chess engine}
 \usage{
-uci_go(engine, depth = NULL, infinite = FALSE, stoptime = 1,
-  wtime = NULL, btime = NULL, winc = NULL, binc = NULL)
+uci_go(
+  engine,
+  depth = NULL,
+  infinite = FALSE,
+  stoptime = 1,
+  wtime = NULL,
+  btime = NULL,
+  winc = NULL,
+  binc = NULL
+)
 }
 \arguments{
 \item{engine}{engine object}
@@ -38,7 +46,7 @@ engine_path <- "./stockfish_10_x64"
 # Windows
 # engine_path <- "./stockfish_10_x64.exe"
 e <- uci_engine(engine_path)
-e <- uci_go(depth = 10)
+e <- uci_go(e,depth = 10)
 uci_quit(e)
 # Using pipe '\%>\%' from magrittr:
 require(magrittr)

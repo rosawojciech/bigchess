@@ -12,6 +12,7 @@
 #' engine_path <- "./stockfish_10_x64"
 #' # Windows
 #' # engine_path <- "./stockfish_10_x64.exe"
+#' require(processx)
 #' e <- uci_engine(engine_path)
 #' e <- uci_go(depth = 10)
 #' rslt <- uci_quit(e)
