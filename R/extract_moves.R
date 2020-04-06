@@ -22,9 +22,9 @@ extract_moves <- function(movetext,N = 10,last.move = T){
   x <- gsub("{[^}]+}","",x,perl = T)
   x <- trimws(gsub("  "," ",x))
   sx <- strsplit(x," ")
-  r <- as.data.frame(t(sapply(sx,function(i){
+  r <- data.frame(t(sapply(sx,function(i){
     return(  i[1:(N*2)])
-  } )))
+  } )),stringsAsFactors = TRUE)
   colnames(r) <- paste0(rep(c("W","B"),times = N),rep(1:N,each = 2))
   rownames(r) <- NULL
   cmplt <- substr(trimws(gsub("  "," ",movetext)),1,3)
