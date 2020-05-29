@@ -9,6 +9,7 @@
 #' @return ff data frame like from read.pgn() function. Since character values are not supported in ffdf object, "Movetext" column is ommited.
 #'
 #' @examples
+#'\donttest{
 #' require(ff)
 #' require(ffbase)
 #' f <- system.file("extdata", "Carlsen.gz", package = "bigchess")
@@ -20,7 +21,6 @@
 #' # con argument is passed directly to readLines(con,batch.size)
 #' # so (if total number of lines to read is greater then batch.size)
 #' # depending on platform use it correctly:
-#'\donttest{
 #' # Windows ('rb' opening mode for loop over readLines):
 #' con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"rb",encoding = "latin1")
 #' # con <- file("path_to_big_chess_file.pgn","rb",encoding = "latin1")
@@ -38,8 +38,6 @@
 #' fdf <- read.pgn.ff(file(unzf,"rb"))
 #' delete(fdf)
 #' }
-#' @import ff
-#' @importFrom ffbase ffdfappend
 #' @export
 read.pgn.ff <- function(con,batch.size = 10^6,ignore.other.games = F,...){
   rl <- readLines(con,batch.size)
@@ -50,7 +48,7 @@ read.pgn.ff <- function(con,batch.size = 10^6,ignore.other.games = F,...){
       wrp <- read.pgn(rl,big.mode = T,ignore.other.games = F,...)[sel_cols]
       for(i in sel_cols) if(is.character(wrp[,i]))
         wrp[,i] <- factor(wrp[,i])
-      res <- ffdfappend(res,as.ffdf(wrp[,sel_cols]))
+      res <- ffbase::ffdfappend(res,ff::as.ffdf(wrp[,sel_cols]))
     }
     else {
       wrp <- read.pgn(rl,big.mode = T,ignore.other.games = F,...)

@@ -1,13 +1,13 @@
 Package: bigchess
 Type: Package
 Title: Read, Manipulate, Explore Chess PGN Files and R API to UCI Chess Engines
-Version: 1.7.1
+Version: 1.7.2
 Author: Wojciech Rosa
 Maintainer: Wojciech Rosa <w.rosa@pollub.pl>
 Description: Provides functions for reading *.PGN files with more than one game, including large files without copying it into RAM (using 'ff' package or 'RSQLite' package). Handle chess data and chess aggregated data, count figure moves statistics, create player profile, plot winning chances, browse openings. Set of functions of R API to communicate with UCI-protocol based chess engines.
 License: GPL-3
-Imports: ff,ffbase,RSQLite,processx
-Suggests: rjson,magrittr
+Imports: processx
+Suggests: ff,ffbase,RSQLite,rjson,magrittr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.0

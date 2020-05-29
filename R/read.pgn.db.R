@@ -9,6 +9,7 @@
 #' @param ... further arguments passed directly to read.pgn() function (besides ignore.other.games and big.mode)
 #'
 #' @examples
+#'\donttest{
 #' f <- system.file("extdata", "Carlsen.gz", package = "bigchess")
 #' con <- gzfile(f,"rbt",encoding = "latin1")
 #' require(RSQLite)
@@ -20,7 +21,6 @@
 #' # con argument is passed directly to readLines(con,batch.size)
 #' # so (if total number of lines to read is greater then batch.size)
 #' # depending on platform use it correctly:
-#'\donttest{
 #' # Windows ('rb' opening mode for loop over readLines):
 #' con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"rb",encoding = "latin1")
 #' # con <- file("path_to_big_chess_file.pgn","rb",encoding = "latin1")
@@ -37,7 +37,6 @@
 #' unzf <- unzip("zipped_pgn_file.zip")
 #' read.pgn.db(con,conn = conn)
 #' }
-#' @import RSQLite
 #' @export
 read.pgn.db <- function(con,batch.size = 10^6,conn,table.name = "pgn",...){
   rl <- readLines(con,batch.size)
@@ -47,11 +46,11 @@ read.pgn.db <- function(con,batch.size = 10^6,conn,table.name = "pgn",...){
   while(lrl>0){
     if(!first) {
       wrp <- read.pgn(rl,big.mode = T,ignore.other.games = F,...)
-      dbWriteTable(conn,table.name,wrp,append = T)
+      RSQLite::dbWriteTable(conn,table.name,wrp,append = T)
     }
     else {
       wrp <- read.pgn(rl,big.mode = T,ignore.other.games = F,...)
-      dbWriteTable(conn,table.name,wrp)
+      RSQLite::dbWriteTable(conn,table.name,wrp)
       first <- F
     }
     x <- grepl("^\\[Event ",rl,perl = T)
@@ -69,5 +68,5 @@ read.pgn.db <- function(con,batch.size = 10^6,conn,table.name = "pgn",...){
   }
 
   close(con)
-  message(paste0(Sys.time(),", end of file: ",dbGetQuery(conn, "SELECT COUNT(*) FROM pgn")," games imported successfully"))
+  message(paste0(Sys.time(),", end of file: ",RSQLite::dbGetQuery(conn, "SELECT COUNT(*) FROM pgn")," games imported successfully"))
 }
