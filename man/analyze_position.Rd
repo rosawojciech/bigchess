@@ -7,7 +7,7 @@
 analyze_position(engine, san = NULL, lan = NULL, ...)
 }
 \arguments{
-\item{engine}{engine object}
+\item{engine}{engine path or engine object from uci_engine()}
 
 \item{san}{movetext in short algebraic notation, default NULL}
 

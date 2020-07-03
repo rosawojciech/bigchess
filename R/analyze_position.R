@@ -1,7 +1,7 @@
 #' Analyze position
 #'
 #' Analyze position using UCI engine and R API
-#' @param engine engine object
+#' @param engine engine path or engine object from uci_engine()
 #' @param san movetext in short algebraic notation, default NULL
 #' @param lan movetext in long algebraic notation, default NULL
 #' @param ... further arguments passed directly to uci_go()
