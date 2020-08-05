@@ -13,12 +13,12 @@
 #' Most popular: "WhiteElo", "BlackElo","ECO","SetUp" or "FEN". Case sensitive.
 #'
 #' @examples
-#'\donttest{
 #' f <- system.file("extdata", "2016_Candidates.pgn", package = "bigchess")
 #' df <- read.pgn(f)
 #' write.pgn(df, file = "my_file.pgn")
 #' df2 <- read.pgn("my_file.pgn")
-#' all.equal(df,df2) # TRUE}
+#' all.equal(df,df2) # TRUE
+#' @export
 write.pgn <- function(df, file, add.tags = NULL, append = FALSE){
   tags <- c(c("Event","Site","Date","Round","White","Black","Result"),add.tags)
   write("",file = file, append = append)
