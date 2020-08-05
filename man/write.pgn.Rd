@@ -27,6 +27,7 @@ Write PGN data.frames into file
 f <- system.file("extdata", "2016_Candidates.pgn", package = "bigchess")
 df <- read.pgn(f)
 write.pgn(df, file = "my_file.pgn")
-df2 <- read.pgn("my_file.pgn")
+df2 <- read.pgn("games.pgn")
 all.equal(df,df2) # TRUE
+unlink("games.pgn") # clean up
 }
