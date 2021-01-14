@@ -4,21 +4,23 @@
 \alias{write.pgn}
 \title{Write PGN data.frames into file}
 \usage{
-write.pgn(df, file, add.tags = NULL, append = FALSE)
+write.pgn(df, file, add.tags = NULL, append = FALSE, source.movetext = TRUE)
 }
 \arguments{
 \item{df}{data.frame from read.pgn()}
 
 \item{file}{string path to destination file}
 
-\item{add.tags}{string vector containing additional tags to be parsed.
+\item{add.tags}{string vector containing additional tags to be parsed.}
+
+\item{append}{boolean (default FALSE), should games be appended to current file?}
+
+\item{source.movetext}{boolean (default TRUE), if set and SourceMovetext appears in df then write SourceMovetext as Movetext; else use parsed Movetext
 According to Seven Tag Roster rule:
 http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8.1.1
 The STR tag pairs appear before any other tag pairs: "Event", "Site", "Date", "Round", "White", "Black" and "Result".
 Using this argument you can specify supplemental tag names, such as: Player related information, Event related information, Opening information (locale specific), Opening information (third party vendors), Time and date related information, Time control, Alternative starting positions, Game conclusion and Miscellaneous.
 Most popular: "WhiteElo", "BlackElo","ECO","SetUp" or "FEN". Case sensitive.}
-
-\item{append}{boolean (default FALSE), should games be appended to current file?}
 }
 \description{
 Write PGN data.frames into file

@@ -6,6 +6,7 @@
 #' @param file string path to destination file
 #' @param append boolean (default FALSE), should games be appended to current file?
 #' @param add.tags string vector containing additional tags to be parsed.
+#' @param source.movetext boolean (default TRUE), if set and SourceMovetext appears in df then write SourceMovetext as Movetext; else use parsed Movetext
 #' According to Seven Tag Roster rule:
 #' http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8.1.1
 #' The STR tag pairs appear before any other tag pairs: "Event", "Site", "Date", "Round", "White", "Black" and "Result".
@@ -20,14 +21,22 @@
 #' all.equal(df,df2) # TRUE
 #' unlink("my_file.pgn") # clean up
 #' @export
-write.pgn <- function(df, file, add.tags = NULL, append = FALSE){
-  tags <- c(c("Event","Site","Date","Round","White","Black","Result"),add.tags)
-  write("",file = file, append = append)
-for(i in 1:nrow(df)){
-  tmp <- df[i,]
-  for(t in tags){
-    write(paste0('[',t,' "',as.character(tmp[[t]]),'"]'),file = file,append = TRUE)
+write.pgn <- function (df, file, add.tags = NULL, append = FALSE, source.movetext = TRUE){
+  tags <- c(c("Event", "Site", "Date", "Round", "White", "Black","Result"), add.tags)
+  write("", file = file, append = append)
+  for (i in 1:nrow(df)) {
+    tmp <- df[i, ]
+    for (t in tags) {
+      write(paste0("[", t, " \"", as.character(tmp[[t]]),
+                   "\"]"), file = file, append = TRUE)
+    }
+    if(source.movetext & "SourceMovetext" %in% colnames(df)){
+      write(paste(as.character(tmp$SourceMovetext), as.character(tmp$Result),
+                  "\n"), file = file, append = TRUE)
+    }
+    else{
+      write(paste(as.character(tmp$Movetext), as.character(tmp$Result),
+                  "\n"), file = file, append = TRUE)
+    }
   }
-  write(paste(as.character(tmp$Movetext),as.character(tmp$Result),"\n"),file = file,append = TRUE)
-}
 }
