@@ -32,7 +32,7 @@ nrow(df_pp) # 2
 df_pp <- player_profile(df,"Kasparov")
 nrow(df_pp) # 2109 - correct
 boxplot(P_Q_moves/NMoves~Player_Col,df_pp,
-main = "Average Queen Moves\\n Kasparov as Black (909 games) vs Kasparov as White (1200 games)",
+main = "Average Queen Moves\n Kasparov as Black (909 games) vs Kasparov as White (1200 games)",
 col = c("black","white"),border = c("black","black"),notch = TRUE)
 # Magnus Carlsen data example
 f <- system.file("extdata", "Carlsen.gz", package = "bigchess")

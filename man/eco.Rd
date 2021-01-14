@@ -4,7 +4,9 @@
 \name{eco}
 \alias{eco}
 \title{ECO}
-\format{A data frame with ECO openings}
+\format{
+A data frame with ECO openings
+}
 \usage{
 data(eco)
 }

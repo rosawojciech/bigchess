@@ -4,7 +4,9 @@
 \name{FirstTwoMoves}
 \alias{FirstTwoMoves}
 \title{Example dataset}
-\format{A data frame with popular positions in classic chess}
+\format{
+A data frame with popular positions in classic chess
+}
 \usage{
 data(FirstTwoMoves)
 }
