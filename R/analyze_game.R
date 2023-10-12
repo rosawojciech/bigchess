@@ -12,11 +12,11 @@ utils::globalVariables(c("LAN"))
 #' @examples
 #'\donttest{
 #' # Linux (make sure you have executable permission):
-#' engine_path <- "./stockfish_10_x64"
+#' # engine_path <- "./stockfish_10_x64"
 #' # Windows
-#' # engine_path <- "./stockfish_10_x64.exe"
+#' engine_path <- "//stockfish.exe"
 #' g <- "1. e4 e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7"
-#' G <- analyze_game(engine_path,san = g ,depth = 20)
+#' G <- analyze_game(engine_path, san = g, depth = 1)
 #' G[[1]] # handles info about first move in the game
 #' G[[1]]$comment # "book"
 #' G[[10]]$curmove_san # "Be7"
