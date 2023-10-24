@@ -2,19 +2,29 @@
 % Please edit documentation in R/san2lan.R
 \name{san2lan}
 \alias{san2lan}
-\title{Movetext conversion from SAN to LAN}
+\title{Convert chess moves from SAN to LAN}
 \usage{
 san2lan(movetext.san)
 }
 \arguments{
-\item{movetext.san}{movetext string in standard algebraic notation (SAN) required by FIDE, but without comments, variants etc.}
+\item{movetext.san}{A string of chess moves in SAN.}
 }
 \value{
-movetext in long algebraic notation
+A string of chess moves in LAN.
 }
 \description{
-Convert SAN movetext (FIDE) to LAN movetext (used by chess engines)
+This function converts a string of chess moves in standard algebraic notation
+(SAN) into UCI long algebraic notation (LAN), which is used by chess engines.
+}
+\details{
+The \code{san2lan} function takes a string of chess moves in SAN and
+converts it to LAN. The string should not include comments, variants, etc.
+}
+\note{
+This function assumes that the moves are valid and does not check for
+errors or illegal moves.
 }
 \examples{
 san2lan("1. e4 e5 2. Nf3 Nf5 3. d5 ")
+
 }

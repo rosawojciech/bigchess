@@ -1,17 +1,40 @@
-#' Sending command register for chess engine
+#' Send the 'register' command to a chess engine
 #'
-#' Sending command register for chess engine. Info about register command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-#' this is the command to try to register an engine or to tell the engine that registration will be done later. This command should always be sent if the engine	has send "registration error" at program startup.
-#' @param engine engine object
-#' @param later boolean default TRUE
-#' @param name string
-#' @param code string
-#' @return engine object
+#' This function sends the 'register' command to a chess engine.
+#'
+#' @details The 'register' command is for engines that require user
+#'   registration. For details see the [UCI
+#'   protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html).
+#'
+#' @param engine An engine handler created by [bigchess::uci_engine()].
+#' @param later (default = `TRUE`) A Boolean indicating whether to register
+#'   later.
+#' @param name (default = `NULL`) A string giving the registration name.
+#' @param code (default = `NULL`) A string giving the registration code.
+#'
+#' @return An updated engine handler.
+#'
+#' @inherit uci_cmd seealso
+#' @inherit uci_cmd examples
 #'
 #' @export
-uci_register <- function(engine,later = TRUE, name = NULL, code = NULL){
-  if(later) uci_cmd(engine,"register later")
-  if(!is.null(name)) uci_cmd(engine,paste("register name",name))
-  if(!is.null(name)) uci_cmd(engine,paste("register code",code))
+
+uci_register <- function(engine, later = TRUE, name = NULL, code = NULL) {
+  # Send 'register later'
+  if (later) {
+    uci_cmd(engine, "register later")
+  }
+
+  # Send name
+  if (!is.null(name)) {
+    uci_cmd(engine, paste("register name", name))
+  }
+
+  # Send code
+  if (!is.null(code)) {
+    uci_cmd(engine, paste("register code", code))
+  }
+
+  # Return the updated engine object
   return(engine)
 }

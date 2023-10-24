@@ -1,58 +1,81 @@
-#' Analyze position
+#' Analyze a chess position
 #'
-#' Analyze position using UCI engine and R API
-#' @param engine engine path or engine object from uci_engine()
-#' @param san movetext in short algebraic notation, default NULL
-#' @param lan movetext in long algebraic notation, default NULL
-#' @param ... further arguments passed directly to uci_go()
-#' @return list containg bestomove, score and bestlines
+#' This function analyzes a chess position using a
+#' [UCI-compatible](https://wbec-ridderkerk.nl/html/UCIProtocol.html) chess
+#' engine.
+#'
+#' @details The function analyzes a chess position represented by a series of
+#'   chess moves in either short algebraic notation (SAN) or UCI long algebraic
+#'   notation (LAN), and uses a UCI-compatible chess engine to analyze the
+#'   position. The results include the best move, score, and best lines.
+#'
+#' @param engine Either a character string giving the path to a chess engine, or
+#'   an engine handler created by [bigchess::uci_engine()].
+#' @param san (default = `NULL`) A character string giving a series of chess
+#'   moves in short algebraic notation.
+#' @param lan (default = `NULL`) A character string giving a series of chess
+#'   moves in UCI long algebraic notation.
+#' @param ... Further arguments passed to [bigchess::uci_go()].
+#'
+#' @return A list containing the results of the analysis.
+#'
+#' @seealso [bigchess::analyze_game()]
 #'
 #' @examples
-#'\donttest{
-#' # Linux (make sure you have executable permission):
-#' engine_path <- "./stockfish_10_x64"
-#' # Windows
-#' # engine_path <- "./stockfish_10_x64.exe"
-#' require(magrittr)
-#' ap <- analyze_position(engine_path,san = "1. e4",depth = 20)
-#' ap$bestmove_lan
-#' # "e7e5"
-#' ap$score
-#' # -7
-#' ap$bestmove_san
-#' # "e5"
-#' ap$curpos_lan
-#' # "e2e4"
-#' ap$curpos_san
-#' # "1. e4"
-#' ap$bestline_san
-#' # "e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7
-#' # 6. Re1 d6 7. Nxd4 Ne5 8. Bb3 O-O 9. Nc3 c5
-#' # 10. Nf5 Bxf5 11. exf5 c4 12. Ba4 a6 13. Qe2"
-#' ap$bestline_lan
-#' # "e7e5 g1f3 b8c6 d2d4 e5d4 f1c4 g8f6 e1g1 f8e7
-#' # f1e1 d7d6 f3d4 c6e5 c4b3 e8g8 b1c3 c7c5 d4f5
-#' # c8f5 e4f5 c5c4 b3a4 a7a6 d1e2"
+#' # To run the example code, place a UCI-compatible chess engine in the
+#' # `bigchess` subdirectory `/inst/extdata/engine`, or replace the line below
+#' # with a valid path:
+#' # engine_path <- "/put/your/own/engine/path/here"
+#' engine_path <- find_engine()
+#' if (!is.null(engine_path)) {
+#'   analyze_position(engine_path, san = "1. e4", depth = 2)
+#' } else {
+#'  stop(paste0('To run the examples, install a chess engine in /inst/extdata/',
+#'              'engine,\n or replace engine_path with the path to an engine.'))
 #' }
+#'
 #' @export
-analyze_position <- function(engine,san = NULL, lan = NULL, ...){
 
-  if(class(engine)=="character") e <- uci_engine(path = engine)
-  else e <- engine
-  if(!is.null(san)) lan <- san2lan(san)
-  if(!is.null(lan)) san <- lan2san(lan)
-  e <- uci_position(e,moves = lan)
-  e <-  uci_go(e,...)
-  ucilog <-  uci_quit(e)
+analyze_position <- function(engine, san = NULL, lan = NULL, ...) {
+
+  # Create an engine handler
+  if (is.character(engine)) {
+    e <- uci_engine(path = engine)
+  } else {
+    e <- engine
+  }
+
+  # Do the LAN/SAN conversions
+  if (!is.null(san)) {
+    lan <- san2lan(san)
+  }
+  if (!is.null(lan)) {
+    san <- lan2san(lan)
+  }
+
+  # Set up the position and start the analysis
+  e <- uci_position(e, moves = lan)
+  e <- uci_go(e, ...)
+
+  # Read the output from the chess engine
+  ucilog <- uci_quit(e)
+
+  # Parse and store the output
   r <- list()
-  r$bestmove_lan <-  uci_parse(ucilog)
-  r$score <- uci_parse(ucilog,"score")
-  r$bestline_lan <- uci_parse(ucilog,"bestline")
+  r$bestmove_lan <- uci_parse(ucilog)
+  r$score <- uci_parse(ucilog, "score")
+  r$bestline_lan <- uci_parse(ucilog, "bestline")
   r$curpos_lan <- lan
   r$curpos_san <- san
-  l2s <- lan2san(paste(r$curpos_lan,r$bestline_lan))
-  r$bestline_san <- substr(l2s,nchar(r$curpos_san)+2,nchar(l2s))
-  r$bestmove_san <- strsplit(gsub("[0-9]+\\. ","",r$bestline_san)," ")[[1]][1]
+
+  # Convert LAN to SAN for bestline and bestmove
+  l2s <- lan2san(paste(r$curpos_lan, r$bestline_lan))
+  r$bestline_san <- substr(l2s, nchar(r$curpos_san) + 2, nchar(l2s))
+  r$bestmove_san <- strsplit(gsub("[0-9]+\\. ", "", r$bestline_san), " ")[[1]][1]
+
+  # Add a comment field
   r$comment <- ""
+
+  # Return the result
   return(r)
 }

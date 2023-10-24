@@ -2,21 +2,34 @@
 % Please edit documentation in R/stat_moves.R
 \name{stat_moves}
 \alias{stat_moves}
-\title{Extract statistics of moves}
+\title{Count the number of times each type of piece moved}
 \usage{
 stat_moves(movetext, sides = "both")
 }
 \arguments{
-\item{movetext}{movetext string (or string vector). The standard English values are required: pawn = "P" (often not used), knight = "N", bishop = "B", rook = "R", queen = "Q", and king = "K".}
+\item{movetext}{A character vector of movetext from a PGN.}
 
-\item{sides}{"both" (default),"white" or "black"}
+\item{sides}{(default = "both") A string indicating which side's moves to
+count ("white", "black", or "both").}
 }
 \value{
-Data frame containing moves count statistics for white and for black and total.
+A data frame containing move count statistics for white and black, as
+well as the total.
 }
 \description{
-Extract statistics of moves (counts figure moves) from movetext vector into data frame
+The function creates a data frame containing the number of times each type of
+piece was moved.
+}
+\details{
+The function counts the number of moves for each type of chess piece
+(pawn, knight, bishop, rook, queen, and king) for both white and black
+players, and calculates the total number of moves for each side (white,
+black), as well as the combined total. The results are returned in a data
+frame. The \code{movetext} argument must use The standard English piece
+abbreviations: pawn = "P" (optional; often omitted), knight = "N", bishop =
+"B", rook = "R", queen = "Q", and king = "K".
 }
 \examples{
 stat_moves("1. e4 e5 2. Nf3 Nf5 3. d5 ")
+
 }

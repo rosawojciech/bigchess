@@ -1,41 +1,47 @@
-#' Parse GUI commands from chess engine
+#' Parse GUI commands from a chess engine
 #'
-#' Parse GUI commands from chess engine.
+#' This function parses results that were returned from a [UCI
+#' protocol](https://wbec-ridderkerk.nl/html/UCIProtocol.html) chess engine.
 #'
-#' @param ucilog strings from uci_quit() or uci_read()$temp
-#' @param filter string, one of 'bestmove' (default), 'score' or 'bestline'
-#' @return strings with parsed information from engine
+#' @details  The function takes output from `uci_quit()` or `uci_read()$temp`
+#'   and returns the specified output. The type of output ('bestmove', 'score',
+#'   or 'bestline') is specified using the `filter` parameter.
 #'
-#' @examples
-#'\donttest{
-#' # Linux (make sure you have executable permission):
-#' engine_path <- "./stockfish_10_x64"
-#' # Windows
-#' # engine_path <- "./stockfish_10_x64.exe"
-#' require(processx)
-#' e <- uci_engine(engine_path)
-#' e <- uci_go(depth = 10)
-#' rslt <- uci_quit(e)
-#' uci_parse(rslt)
-#' # Using pipe '%>%' from magrittr:
-#' require(magrittr)
-#' uci_engine(engine_path) %>% uci_go(depth = 10) %>% uci_quit() %>% uci_parse()}
+#' @param ucilog A character vector of output from `uci_quit()` or
+#'   `uci_read()$temp`.
+#' @param filter (default = 'bestmove') A string representing one of 'bestmove',
+#'   'score', or 'bestline'.
+#'
+#' @return A character vector of the results specified by `filter`.
+#'
+#' @inherit uci_cmd seealso
+#' @inherit uci_cmd examples
+#'
 #' @export
-uci_parse <- function(ucilog,filter = "bestmove"){
-  if(filter == "bestmove"){
-    rslt <- ucilog[grepl(filter,ucilog)]
-    rslt <- gsub("bestmove ","",rslt)
-    up <- gsub(" ponder [a-z0-9]+","",rslt)
+#' @export
+uci_parse <- function(ucilog, filter = "bestmove") {
+  # Extraxt 'bestmove'
+  if (filter == "bestmove") {
+    rslt <- ucilog[grepl(filter, ucilog)]
+    rslt <- gsub("bestmove ", "", rslt)
+    up <- gsub(" ponder [a-z0-9]+", "", rslt)
   }
-  if(filter == "score"){
-    m <- gregexpr("score cp((?:\\s|\\s\\-)[0-9]+)",ucilog)
-    rslt <- as.integer(gsub("score cp ", " ",unlist(regmatches(ucilog,m))))
-    up <- tail(rslt,n=1)
+
+  # Extract 'score'
+  if (filter == "score") {
+    m <- gregexpr("score cp((?:\\s|\\s\\-)[0-9]+)", ucilog)
+    rslt <- as.integer(gsub("score cp ", " ", unlist(regmatches(ucilog, m))))
+    up <- tail(rslt, n = 1)
   }
-  if(filter == "bestline"){
-    m <- gregexpr(" pv [a-z0-9 ]+",ucilog)
-    rslt <- gsub(" pv ", "",unlist(regmatches(ucilog,m)))
-    up <- tail(rslt,n=1)
+
+  # Extract 'bestline'
+  if (filter == "bestline") {
+    m <- gregexpr(" pv [a-z0-9 ]+", ucilog)
+    rslt <- gsub(" pv ", "", unlist(regmatches(ucilog, m)))
+    up <- tail(rslt, n = 1)
   }
+
+  # Return the result
   return(up)
 }
+

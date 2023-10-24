@@ -2,23 +2,107 @@
 % Please edit documentation in R/uci_register.R
 \name{uci_register}
 \alias{uci_register}
-\title{Sending command register for chess engine}
+\title{Send the 'register' command to a chess engine}
 \usage{
 uci_register(engine, later = TRUE, name = NULL, code = NULL)
 }
 \arguments{
-\item{engine}{engine object}
+\item{engine}{An engine handler created by \code{\link[=uci_engine]{uci_engine()}}.}
 
-\item{later}{boolean default TRUE}
+\item{later}{(default = \code{TRUE}) A Boolean indicating whether to register
+later.}
 
-\item{name}{string}
+\item{name}{(default = \code{NULL}) A string giving the registration name.}
 
-\item{code}{string}
+\item{code}{(default = \code{NULL}) A string giving the registration code.}
 }
 \value{
-engine object
+An updated engine handler.
 }
 \description{
-Sending command register for chess engine. Info about register command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-this is the command to try to register an engine or to tell the engine that registration will be done later. This command should always be sent if the engine	has send "registration error" at program startup.
+This function sends the 'register' command to a chess engine.
+}
+\details{
+The 'register' command is for engines that require user
+registration. For details see the \href{http://wbec-ridderkerk.nl/html/UCIProtocol.html}{UCI protocol}.
+}
+\examples{
+# To run the example code, place a UCI-compatible chess engine in the
+# bigchess subdirectory /inst/extdata/engine, or replace the line below with
+# a path to a local UCI-compatible chess engine:
+# engine_path <- "/put/your/own/engine/path/here"
+
+engine_path <- find_engine() # Checks to see if an engine is available
+if (!is.null(engine_path)) { # Runs examples only if an engine is available
+
+  # Examples are shown for the entire family of UCI engine functions. Run the
+  # uci_engine example first to create an engine for the other examples. Run
+  # the uci_quit example last to shut down the engine when done.
+
+  # Create an engine handler
+  engine <- uci_engine(engine_path)
+
+  # Set up a position using moves or FEN
+  engine <- uci_position(engine, moves = 'e2e4 c7c5')
+  engine <- uci_position(
+    engine,
+    fen = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1'
+  )
+
+  # Start calculating
+  uci_go(engine, depth = 2)
+
+  # Read and parse engine output
+  result <- uci_go(engine, depth = 2) |> uci_read()
+  ucilog <- uci_parse(result$temp)
+
+  # Send a custom command
+  engine <- uci_cmd(engine, "go depth 2")
+
+  # Stop calculations
+  engine <- uci_cmd(engine, "go depth 1000") |> uci_stop()
+
+  # Change the engine's internal parameters
+  engine <- uci_setoption(engine, name  = "Clear", value = "Hash")
+
+  # Turn debug mode on or off
+  engine <- uci_debug(engine, TRUE)
+  engine <- uci_debug(engine, FALSE)
+
+  # Register the engine
+  engine <- uci_register(engine, later = TRUE)
+  engine <- uci_register(engine, name = 'name', code = 'code')
+
+  # Send various other UCI commands to the engine
+  engine <- uci_uci(engine)
+  engine <- uci_ucinewgame(engine)
+  engine <- uci_isready(engine)
+  engine <- uci_ponderhit(engine)
+
+  # Shut down the engine
+  uci_quit(engine)
+
+} else {
+ stop(paste0('To run the examples, install a chess engine in /inst/extdata/',
+             'engine,\n or replace engine_path with the path to an engine.'))
+}
+}
+\seealso{
+\itemize{
+\item \code{\link[=uci_cmd]{uci_cmd()}}
+\item \code{\link[=uci_debug]{uci_debug()}}
+\item \code{\link[=uci_engine]{uci_engine()}}
+\item \code{\link[=uci_go]{uci_go()}}
+\item \code{\link[=uci_isready]{uci_isready()}}
+\item \code{\link[=uci_parse]{uci_parse()}}
+\item \code{\link[=uci_ponderhit]{uci_ponderhit()}}
+\item \code{\link[=uci_position]{uci_position()}}
+\item \code{\link[=uci_quit]{uci_quit()}}
+\item \code{\link[=uci_read]{uci_read()}}
+\item \code{\link[=uci_register]{uci_register()}}
+\item \code{\link[=uci_setoption]{uci_setoption()}}
+\item \code{\link[=uci_stop]{uci_stop()}}
+\item \code{\link[=uci_uci]{uci_uci()}}
+\item \code{\link[=uci_ucinewgame]{uci_ucinewgame()}}
+}
 }

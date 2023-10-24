@@ -2,46 +2,39 @@
 % Please edit documentation in R/player_profile.R
 \name{player_profile}
 \alias{player_profile}
-\title{Compute player profile}
+\title{Compute a player's move frequency profile}
 \usage{
 player_profile(df, player)
 }
 \arguments{
-\item{df}{data frame from read.pgn or read.pgn.ff files with stats computed.}
+\item{df}{A data frame of chess games.}
 
-\item{player}{string used in grepl(player,White) and grepl(player,Black)}
+\item{player}{A string specifying the name of the player.}
 }
 \value{
-Data frame with player (column prefix P_) and opponent (column prefix O_) figure move counts. Column Player_Col indicating pieces colour for player (factor White or Black).
-Example column P_Q_moves means number of player Queen moves count.
+A data frame where each row represents a game, and move counts for
+each type of piece are arranged by column.
 }
 \description{
-Computes players profile from data frame obtained from read.pgn() function into data frame
+This function shows how often a player moved each type of chess piece.
+}
+\details{
+The function accepts a data frame of chess games typically obtained
+using \code{read.pgn()} or \code{read.pgn.ff()}. The function returns a data frame
+where each row corresponds to a game, and move counts for each type of
+piece are arranged by column.
 }
 \examples{
+# Generate a profile for Kasparov
 f <- system.file("extdata", "Kasparov.gz", package = "bigchess")
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE,ignore.other.games = TRUE)
-nrow(df) # 2109
-df_pp <- player_profile(df,"Kasparov, Gary")
-nrow(df_pp) # 1563
-df_pp <- player_profile(df,"Kasparov,G")
-nrow(df_pp) # 543
-df_pp <- player_profile(df,"Kasparov, G\\\\.")
-nrow(df_pp) # 2
-df_pp <- player_profile(df,"Kasparov")
-nrow(df_pp) # 2109 - correct
-boxplot(P_Q_moves/NMoves~Player_Col,df_pp,
-main = "Average Queen Moves\n Kasparov as Black (909 games) vs Kasparov as White (1200 games)",
-col = c("black","white"),border = c("black","black"),notch = TRUE)
-# Magnus Carlsen data example
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE, ignore.other.games = TRUE)
+df_pp <- player_profile(df, "Kasparov")
+
+# Generate a profile for Carlsen
 f <- system.file("extdata", "Carlsen.gz", package = "bigchess")
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE,ignore.other.games = TRUE)
-nrow(df) # 2410
-df_pp <- player_profile(df,"Carlsen")
-nrow(df_pp) # 2411 - ??
-# One game was played by Carlsen,H
-df_pp <- player_profile(df,"Carlsen,M")
-nrow(df_pp) # 2410 - correct
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE, ignore.other.games = TRUE)
+df_pp <- player_profile(df, "Carlsen")
+
 }

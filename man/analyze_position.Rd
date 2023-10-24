@@ -2,50 +2,50 @@
 % Please edit documentation in R/analyze_position.R
 \name{analyze_position}
 \alias{analyze_position}
-\title{Analyze position}
+\title{Analyze a chess position}
 \usage{
 analyze_position(engine, san = NULL, lan = NULL, ...)
 }
 \arguments{
-\item{engine}{engine path or engine object from uci_engine()}
+\item{engine}{Either a character string giving the path to a chess engine, or
+an engine handler created by \code{\link[=uci_engine]{uci_engine()}}.}
 
-\item{san}{movetext in short algebraic notation, default NULL}
+\item{san}{(default = \code{NULL}) A character string giving a series of chess
+moves in short algebraic notation.}
 
-\item{lan}{movetext in long algebraic notation, default NULL}
+\item{lan}{(default = \code{NULL}) A character string giving a series of chess
+moves in UCI long algebraic notation.}
 
-\item{...}{further arguments passed directly to uci_go()}
+\item{...}{Further arguments passed to \code{\link[=uci_go]{uci_go()}}.}
 }
 \value{
-list containg bestomove, score and bestlines
+A list containing the results of the analysis.
 }
 \description{
-Analyze position using UCI engine and R API
+This function analyzes a chess position using a
+\href{https://wbec-ridderkerk.nl/html/UCIProtocol.html}{UCI-compatible} chess
+engine.
+}
+\details{
+The function analyzes a chess position represented by a series of
+chess moves in either short algebraic notation (SAN) or UCI long algebraic
+notation (LAN), and uses a UCI-compatible chess engine to analyze the
+position. The results include the best move, score, and best lines.
 }
 \examples{
-\donttest{
-# Linux (make sure you have executable permission):
-engine_path <- "./stockfish_10_x64"
-# Windows
-# engine_path <- "./stockfish_10_x64.exe"
-require(magrittr)
-ap <- analyze_position(engine_path,san = "1. e4",depth = 20)
-ap$bestmove_lan
-# "e7e5"
-ap$score
-# -7
-ap$bestmove_san
-# "e5"
-ap$curpos_lan
-# "e2e4"
-ap$curpos_san
-# "1. e4"
-ap$bestline_san
-# "e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7
-# 6. Re1 d6 7. Nxd4 Ne5 8. Bb3 O-O 9. Nc3 c5
-# 10. Nf5 Bxf5 11. exf5 c4 12. Ba4 a6 13. Qe2"
-ap$bestline_lan
-# "e7e5 g1f3 b8c6 d2d4 e5d4 f1c4 g8f6 e1g1 f8e7
-# f1e1 d7d6 f3d4 c6e5 c4b3 e8g8 b1c3 c7c5 d4f5
-# c8f5 e4f5 c5c4 b3a4 a7a6 d1e2"
+# To run the example code, place a UCI-compatible chess engine in the
+# `bigchess` subdirectory `/inst/extdata/engine`, or replace the line below
+# with a valid path:
+# engine_path <- "/put/your/own/engine/path/here"
+engine_path <- find_engine()
+if (!is.null(engine_path)) {
+  analyze_position(engine_path, san = "1. e4", depth = 2)
+} else {
+ stop(paste0('To run the examples, install a chess engine in /inst/extdata/',
+             'engine,\n or replace engine_path with the path to an engine.'))
 }
+
+}
+\seealso{
+\code{\link[=analyze_game]{analyze_game()}}
 }

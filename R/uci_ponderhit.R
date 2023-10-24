@@ -1,11 +1,20 @@
-#' Sending command ponderhit for chess engine
+#' Send the 'ponderhit' command to a chess engine
 #'
-#' Sending command ponderhit for chess engine. Info about ponderhit command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-#' the user has played the expected move. This will be sent if the engine was told to ponder on the same move the user has played. The engine should continue searching but switch from pondering to normal search.
-#' @param engine engine object
-#' @return engine object
+#' Inform the engine that its predicted move was correct.
+#'
+#' @details The 'ponderhit' command is used when the move that the engine was
+#'   pondering is actually played by the opponent. After receiving this command,
+#'   the engine should execute the move it was pondering. For more details see
+#'   the [UCI protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html).
+#'
+#' @param engine An engine handler created by [bigchess::uci_engine()].
+#'
+#' @return An updated engine handler.
+#'
+#' @inherit uci_cmd seealso
+#' @inherit uci_cmd examples
 #'
 #' @export
 uci_ponderhit <- function(engine){
-  return(uci_cmd(engine,"ponderhit"))
+  return(uci_cmd(engine, "ponderhit"))
 }

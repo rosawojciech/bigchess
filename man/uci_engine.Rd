@@ -2,29 +2,115 @@
 % Please edit documentation in R/uci_engine.R
 \name{uci_engine}
 \alias{uci_engine}
-\title{Create an engine handler in R}
+\title{Open a chess engine}
 \usage{
 uci_engine(path)
 }
 \arguments{
-\item{path}{path to engine file. Make sure you have executable permission on this file.}
+\item{path}{A string specifying the path to a chess engine. Ensure
+that you have executable permission on this file.}
 }
 \value{
-engine object (list of two: pipe to engine and temp as a result from stdout engine)
+An engine handler consisting of a list containing two named elements:
+\itemize{
+\item pipe - a connection to a chess engine
+\item temp - temporary storage for the engine's output
+}
 }
 \description{
-Create an engine handler in R and send command isready
+This function opens a chess engine and returns an "engine handler" consisting
+of a named list containing a connection to the engine, and temporary storage
+for the engine's output.
+}
+\details{
+The function \code{uci_engine()} establishes a connection to an external
+chess engine that uses the Universal Chess Interface \href{https://wbec-ridderkerk.nl/html/UCIProtocol.html}{UCI protocol}. Communication
+with the chess engine is handled using the
+\href{https://github.com/r-lib/processx#readme}{processx} package.
+
+The function returns a list that serves as an "engine handler". Commands
+and updates can be sent or received by passing the engine handler as an
+argument to other \code{bigchess} UCI functions. (See the examples below.) The
+engine can be closed by passing the engine handler as an argument to
+\code{\link[=uci_quit]{uci_quit()}}.
 }
 \examples{
-\donttest{
-# Linux (make sure you have executable permission):
-engine_path <- "./stockfish_10_x64"
-# Windows
-# engine_path <- "./stockfish_10_x64.exe"
-e <- uci_engine(engine_path)
-uci_quit(e)
+# To run the example code, place a UCI-compatible chess engine in the
+# bigchess subdirectory /inst/extdata/engine, or replace the line below with
+# a path to a local UCI-compatible chess engine:
+# engine_path <- "/put/your/own/engine/path/here"
 
-# Using pipe '\%>\%' from magrittr:
-require(magrittr)
-uci_engine(engine_path) \%>\% uci_quit()}
+engine_path <- find_engine() # Checks to see if an engine is available
+if (!is.null(engine_path)) { # Runs examples only if an engine is available
+
+  # Examples are shown for the entire family of UCI engine functions. Run the
+  # uci_engine example first to create an engine for the other examples. Run
+  # the uci_quit example last to shut down the engine when done.
+
+  # Create an engine handler
+  engine <- uci_engine(engine_path)
+
+  # Set up a position using moves or FEN
+  engine <- uci_position(engine, moves = 'e2e4 c7c5')
+  engine <- uci_position(
+    engine,
+    fen = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1'
+  )
+
+  # Start calculating
+  uci_go(engine, depth = 2)
+
+  # Read and parse engine output
+  result <- uci_go(engine, depth = 2) |> uci_read()
+  ucilog <- uci_parse(result$temp)
+
+  # Send a custom command
+  engine <- uci_cmd(engine, "go depth 2")
+
+  # Stop calculations
+  engine <- uci_cmd(engine, "go depth 1000") |> uci_stop()
+
+  # Change the engine's internal parameters
+  engine <- uci_setoption(engine, name  = "Clear", value = "Hash")
+
+  # Turn debug mode on or off
+  engine <- uci_debug(engine, TRUE)
+  engine <- uci_debug(engine, FALSE)
+
+  # Register the engine
+  engine <- uci_register(engine, later = TRUE)
+  engine <- uci_register(engine, name = 'name', code = 'code')
+
+  # Send various other UCI commands to the engine
+  engine <- uci_uci(engine)
+  engine <- uci_ucinewgame(engine)
+  engine <- uci_isready(engine)
+  engine <- uci_ponderhit(engine)
+
+  # Shut down the engine
+  uci_quit(engine)
+
+} else {
+ stop(paste0('To run the examples, install a chess engine in /inst/extdata/',
+             'engine,\n or replace engine_path with the path to an engine.'))
+}
+}
+\seealso{
+\itemize{
+\item \code{\link[=uci_cmd]{uci_cmd()}}
+\item \code{\link[=uci_debug]{uci_debug()}}
+\item \code{\link[=uci_engine]{uci_engine()}}
+\item \code{\link[=uci_go]{uci_go()}}
+\item \code{\link[=uci_isready]{uci_isready()}}
+\item \code{\link[=uci_parse]{uci_parse()}}
+\item \code{\link[=uci_ponderhit]{uci_ponderhit()}}
+\item \code{\link[=uci_position]{uci_position()}}
+\item \code{\link[=uci_quit]{uci_quit()}}
+\item \code{\link[=uci_read]{uci_read()}}
+\item \code{\link[=uci_register]{uci_register()}}
+\item \code{\link[=uci_setoption]{uci_setoption()}}
+\item \code{\link[=uci_stop]{uci_stop()}}
+\item \code{\link[=uci_uci]{uci_uci()}}
+\item \code{\link[=uci_ucinewgame]{uci_ucinewgame()}}
+}
 }
