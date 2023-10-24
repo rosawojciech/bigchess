@@ -2,29 +2,37 @@
 % Please edit documentation in R/plot_tree_eco.R
 \name{plot_tree_eco}
 \alias{plot_tree_eco}
-\title{Plot tree for a given tree ECO table}
+\title{Plot the tree for an ECO tree table}
 \usage{
-plot_tree_eco(tr, main = "", add.lines = T, add.labels = T)
+plot_tree_eco(tr, main = "", add.lines = TRUE, add.labels = TRUE)
 }
 \arguments{
-\item{tr}{data frame containg tree ECO}
+\item{tr}{A data frame containing ECO tree data.}
 
-\item{main}{string for main title, default is ""}
+\item{main}{(default = "") A string for the main title.}
 
-\item{add.lines}{boolean (default TRUE) add weighted mean lines?}
+\item{add.lines}{(default = TRUE) A Boolean indicating whether to add
+weighted mean lines.}
 
-\item{add.labels}{boolean (default TRUE) add labels?}
+\item{add.labels}{(default = TRUE) A Boolean indicating whether to add
+labels.}
 }
 \value{
-Barplot with white scores, draws percent and black scores.
+A barplot of the percentage of wins, losses, and draws.
 }
 \description{
-Plot tree (barplot percentages) for a given tree ECO data frame.
+This function creates a bar plot of the outcomes of a set of chess games.
+}
+\details{
+The function takes a data frame of ECO tree data from \code{tree_eco()}
+as an argument. The bar plot shows the percentage of games that resulted in
+a win, loss, or draw. The weighted mean of the percentages is also shown.
 }
 \examples{
 f <- system.file("extdata", "Kasparov.gz", package = "bigchess")
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE,stat.moves = FALSE, add.tags = "ECO")
-tr <- tree_eco(subset(df,W1=="e4"),20)
-plot_tree_eco(tr,"1. e4 ... ?")
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE, stat.moves = FALSE, add.tags = "ECO")
+tr <- tree_eco(subset(df, W1 == "e4"), 20)
+plot_tree_eco(tr, "1. e4 ... ?")
+
 }

@@ -1,31 +1,45 @@
 utils::globalVariables(c("LAN"))
-#' Analyze game
+#' Analyze a chess game
 #'
-#' Analyze game using UCI engine and R API
-#' @param engine engine path or engine object from uci_engine()
-#' @param san movetext in short algebraic notation, default NULL
-#' @param lan movetext in long algebraic notation, default NULL
-#' @param quiet boolean, hide system messages? Default FALSE
-#' @param ... further arguments passed directly to uci_go(), i.e. depth = 10
-#' @return list containg analyze_position() result (score and bestlines) for each move in the game. Note that if black moves, then score is multiplied by -1.
+#' This function analyzes a chess game using a
+#' [UCI-compatible](https://wbec-ridderkerk.nl/html/UCIProtocol.html) chess
+#' engine.
+#'
+#' @details The moves of the game may be provided in either short algebraic
+#'   notation (SAN) or UCI long algebraic notation (LAN). Note that if it is
+#'   black's turn, the score is multiplied by -1 so that a positive score always
+#'   means white has the advantage, and negative always means black has the
+#'   advantage.
+#'
+#' @inheritParams analyze_position
+#' @param quiet (default = `FALSE`) A Boolean. Hide system messages?
+#'
+#' @return A list containing the results from `analyze_position()` for each
+#'   position in the game.
+#'
+#' @seealso [bigchess::analyze_position()]
 #'
 #' @examples
-#'\donttest{
-#' # Linux (make sure you have executable permission):
-#' # engine_path <- "./stockfish_10_x64"
-#' # Windows
-#' engine_path <- "//stockfish.exe"
-#' g <- "1. e4 e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7"
-#' G <- analyze_game(engine_path, san = g, depth = 1)
-#' G[[1]] # handles info about first move in the game
-#' G[[1]]$comment # "book"
-#' G[[10]]$curmove_san # "Be7"
-#' G[[10]]$score # 62
+#' # To run the example code, place a UCI-compatible chess engine in the
+#' # `bigchess` subdirectory `/inst/extdata/engine`, or replace the line below
+#' # with a valid path:
+#' # engine_path <- "/put/your/own/engine/path/here"
+#' engine_path <- find_engine()
+#' if(!is.null(engine_path)) {
+#'   san <- "1. e4 e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7"
+#'   game <- analyze_game(engine_path, san = san, depth = 2)
+#'   game[[1]] # Analysis results for the first position
+#' } else {
+#'  message(
+#'    paste0(
+#'      'To run the examples, install a chess engine in /inst/extdata/',
+#'      'engine,\n or replace engine_path with the path to an engine.'
+#'    )
+#'  )
 #' }
 #' @export
-analyze_game <- function (engine, san = NULL, lan = NULL,quiet = FALSE, ...)
-{
-  if (class(engine) == "character")
+analyze_game <- function (engine, san = NULL, lan = NULL, quiet = FALSE, ...) {
+  if (is.character(engine))
     e <- uci_engine(path = engine)
   else e <- engine
   if (!is.null(san))

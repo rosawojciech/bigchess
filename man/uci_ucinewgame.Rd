@@ -2,17 +2,104 @@
 % Please edit documentation in R/uci_ucinewgame.R
 \name{uci_ucinewgame}
 \alias{uci_ucinewgame}
-\title{Sending command ucinewgame for chess engine}
+\title{Send the 'ucinewgame' command to a chess engine}
 \usage{
 uci_ucinewgame(engine)
 }
 \arguments{
-\item{engine}{engine object}
+\item{engine}{An engine handler created by \code{\link[=uci_engine]{uci_engine()}}.}
 }
 \value{
-engine object
+An updated engine handler.
 }
 \description{
-Sending command ucinewgame for chess engine. Info about ucinewgame command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-this is sent to the engine when the next search (started with "position" and "go") will be from a different game. This can be a new game the engine should play or a new game it should analyse but also the next position from a testsuite with positions only. If the GUI hasn't sent a "ucinewgame" before the first "position" command, the engine shouldn't expect any further ucinewgame commands as the GUI is probably not supporting the ucinewgame command. So the engine should not rely on this command even though all new GUIs should support it. As the engine's reaction to "ucinewgame" can take some time the GUI should always send "isready" after "ucinewgame" to wait for the engine to finish its operation.
+This function sends the 'ucinewgame' command to a chess engine.
+}
+\details{
+The 'ucinewgame' command is used to inform the chess engine that the
+next search will be from a different game. For more details see the \href{http://wbec-ridderkerk.nl/html/UCIProtocol.html}{UCI protocol}.
+}
+\examples{
+# To run the example code, place a UCI-compatible chess engine in the
+# bigchess subdirectory /inst/extdata/engine, or replace the line below with
+# a path to a local UCI-compatible chess engine:
+# engine_path <- "/put/your/own/engine/path/here"
+
+engine_path <- find_engine() # Checks to see if an engine is available
+if (!is.null(engine_path)) { # Runs examples only if an engine is available
+
+  # Examples are shown for the entire family of UCI engine functions. Run the
+  # uci_engine example first to create an engine for the other examples. Run
+  # the uci_quit example last to shut down the engine when done.
+
+  # Create an engine handler
+  engine <- uci_engine(engine_path)
+
+  # Set up a position using moves or FEN
+  engine <- uci_position(engine, moves = 'e2e4 c7c5')
+  engine <- uci_position(
+    engine,
+    fen = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1'
+  )
+
+  # Start calculating
+  uci_go(engine, depth = 2)
+
+  # Read and parse engine output
+  result <- uci_go(engine, depth = 2) |> uci_read()
+  ucilog <- uci_parse(result$temp)
+
+  # Send a custom command
+  engine <- uci_cmd(engine, "go depth 2")
+
+  # Stop calculations
+  engine <- uci_cmd(engine, "go depth 1000") |> uci_stop()
+
+  # Change the engine's internal parameters
+  engine <- uci_setoption(engine, name  = "Clear", value = "Hash")
+
+  # Turn debug mode on or off
+  engine <- uci_debug(engine, TRUE)
+  engine <- uci_debug(engine, FALSE)
+
+  # Register the engine
+  engine <- uci_register(engine, later = TRUE)
+  engine <- uci_register(engine, name = 'name', code = 'code')
+
+  # Send various other UCI commands to the engine
+  engine <- uci_uci(engine)
+  engine <- uci_ucinewgame(engine)
+  engine <- uci_isready(engine)
+  engine <- uci_ponderhit(engine)
+
+  # Shut down the engine
+  uci_quit(engine)
+
+} else {
+ message(
+   paste0(
+     'To run the examples, install a chess engine in /inst/extdata/',
+     'engine,\n or replace engine_path with the path to an engine.'
+   )
+ )
+}
+}
+\seealso{
+\itemize{
+\item \code{\link[=uci_cmd]{uci_cmd()}}
+\item \code{\link[=uci_debug]{uci_debug()}}
+\item \code{\link[=uci_engine]{uci_engine()}}
+\item \code{\link[=uci_go]{uci_go()}}
+\item \code{\link[=uci_isready]{uci_isready()}}
+\item \code{\link[=uci_parse]{uci_parse()}}
+\item \code{\link[=uci_ponderhit]{uci_ponderhit()}}
+\item \code{\link[=uci_position]{uci_position()}}
+\item \code{\link[=uci_quit]{uci_quit()}}
+\item \code{\link[=uci_read]{uci_read()}}
+\item \code{\link[=uci_register]{uci_register()}}
+\item \code{\link[=uci_setoption]{uci_setoption()}}
+\item \code{\link[=uci_stop]{uci_stop()}}
+\item \code{\link[=uci_uci]{uci_uci()}}
+\item \code{\link[=uci_ucinewgame]{uci_ucinewgame()}}
+}
 }

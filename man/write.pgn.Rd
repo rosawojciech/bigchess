@@ -2,34 +2,50 @@
 % Please edit documentation in R/write.pgn.R
 \name{write.pgn}
 \alias{write.pgn}
-\title{Write PGN data.frames into file}
+\title{Write a PGN file}
 \usage{
 write.pgn(df, file, add.tags = NULL, append = FALSE, source.movetext = TRUE)
 }
 \arguments{
-\item{df}{data.frame from read.pgn()}
+\item{df}{A data frame of chess game data in the format used by \code{read.pgn()}.}
 
-\item{file}{string path to destination file}
+\item{file}{A string specifying the path to the destination file.}
 
-\item{add.tags}{string vector containing additional tags to be parsed.}
+\item{add.tags}{A string vector containing additional tags to be parsed.}
 
-\item{append}{boolean (default FALSE), should games be appended to current file?}
+\item{append}{(default = \code{FALSE}) A Boolean indicating if games should be
+appended to the current file.}
 
-\item{source.movetext}{boolean (default TRUE), if set and SourceMovetext appears in df then write SourceMovetext as Movetext; else use parsed Movetext
-According to Seven Tag Roster rule:
-http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8.1.1
-The STR tag pairs appear before any other tag pairs: "Event", "Site", "Date", "Round", "White", "Black" and "Result".
-Using this argument you can specify supplemental tag names, such as: Player related information, Event related information, Opening information (locale specific), Opening information (third party vendors), Time and date related information, Time control, Alternative starting positions, Game conclusion and Miscellaneous.
-Most popular: "WhiteElo", "BlackElo","ECO","SetUp" or "FEN". Case sensitive.}
+\item{source.movetext}{(default = \code{TRUE}) A Boolean. If \code{TRUE} and
+SourceMovetext appears in df, then write SourceMovetext as Movetext; else
+use parsed Movetext.}
 }
 \description{
-Write PGN data.frames into file
+This function writes a data frame of chess game data to a PGN file.
+}
+\details{
+The function takes a data frame of chess game data in the same
+format obtained from \code{read.pgn()} and writes it to a file. The function
+also allows for additional tags to be parsed and for games to be appended
+to an existing file.
+
+According to the Seven Tag Roster rule
+(http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8.1.1), the
+STR tag pairs ("Event", "Site", "Date", "Round", "White", "Black" and
+"Result") appear before any other tag pairs. The \code{add.tags} argument allows
+you to specify supplemental tag names, such as player-related information,
+event-related information, opening information (locale-specific), opening
+information (third-party vendors), time and date-related information, time
+control, alternative starting positions, game conclusion, and
+miscellaneous. The most popular tags include: "WhiteElo", "BlackElo",
+"ECO", "SetUp" or "FEN". Note that these tags are case sensitive.
 }
 \examples{
 f <- system.file("extdata", "2016_Candidates.pgn", package = "bigchess")
 df <- read.pgn(f)
 write.pgn(df, file = "my_file.pgn")
 df2 <- read.pgn("my_file.pgn")
-all.equal(df,df2) # TRUE
+all.equal(df, df2) # TRUE
 unlink("my_file.pgn") # clean up
+
 }

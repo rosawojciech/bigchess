@@ -1,0 +1,5 @@
+To run the unit tests and examples, you will need a UCI-compatible chess engine capable of running on your hardware. A copy of the engine should be placed in /inst/extdata/engines
+
+For the tests to run properly, this file (Engine_goes_here-README) MUST remain in the directory with the filename UNCHANGED, or the unit tests will fail. Apart from UCI-compatible chess engines, NO OTHER files should be put in this directory, or the unit tests will fail.
+
+If more than one engine is present, only the first will be used. If the engine is not a UCI-compatible chess engine capable of running on your hardware, the unit tests will fail.

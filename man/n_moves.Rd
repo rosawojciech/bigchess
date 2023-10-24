@@ -2,20 +2,25 @@
 % Please edit documentation in R/n_moves.R
 \name{n_moves}
 \alias{n_moves}
-\title{Compute number of moves}
+\title{Count the number of moves}
 \usage{
 n_moves(movetext)
 }
 \arguments{
-\item{movetext}{movetext string (or string vector)}
+\item{movetext}{A character vector of movetext strings.}
 }
 \value{
-n integer (or integer vector)
+An integer vector of move numbers.
 }
 \description{
-Compute total number of moves given movetext string (or string vector)
+This function counts the moves in a given movetext.
+}
+\details{
+The \code{movetext} argument is a character vector and may contain
+multiple movetext strings. The function will return an integer vector of
+equal length to the input containing the move count for each entry.
 }
 \examples{
-n_moves(c("1. e4 e5 2. Nf3 Nf5 3. d5 ","1. d4 d5"))
-# 3 1
+n_moves(c("1. e4 e5 2. Nf3 Nf5 3. d5 ", "1. d4 d5"))
+
 }

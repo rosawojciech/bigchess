@@ -1,0 +1,22 @@
+#' Initialize a chessboard
+#'
+#' This function generates an 8x8 matrix representing a chessboard, with chess
+#' pieces placed in their initial positions.
+#'
+#' @details The function constructs an 8x8 matrix, where each cell corresponds
+#'   to a square on the chessboard. Numeric codes represent different chess
+#'   pieces, with the sign indicating the color (- for black, + for white): 0 =
+#'   empty square, 1 = pawn, 2 = bishop, 3 = knight, 4 = rook, 5 = queen, and 6
+#'   = king.
+#'
+#' @return An 8x8 matrix representing the initial state of a chessboard.
+#'
+#' @examples
+#' # Initialize a chessboard
+#' position <- position.start()
+#'
+#' @export
+position.start <- function() {
+  # Return ps (defined in constants.R)
+  return(ps)
+}

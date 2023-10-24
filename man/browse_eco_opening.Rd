@@ -2,25 +2,35 @@
 % Please edit documentation in R/browse_eco_opening.R
 \name{browse_eco_opening}
 \alias{browse_eco_opening}
-\title{Browse ECO opening}
+\title{Browse ECO Opening}
 \usage{
 browse_eco_opening(df, topn = 0)
 }
 \arguments{
-\item{df}{data frame with imported chess games from read.pgn() function.}
+\item{df}{A data frame with chess games imported using read.pgn().}
 
-\item{topn}{integer, default is 0, passed to tree_eco function (indicating how many top openings should be included).}
+\item{topn}{(default = 0) An integer indicating how many top openings to
+include.}
 }
 \value{
-Data frame from tree_eco function and plot from plot_tree_eco function.
+A data frame from the tree_eco function and a plot from the
+plot_tree_eco function.
 }
 \description{
-Browse ECO opening winning and drawing percentages by table and barplot
+This function allows you to browse ECO opening winning and drawing
+percentages by table and barplot.
+}
+\details{
+The function takes a data frame of chess games and an integer
+indicating the number of top openings to include. It returns a data frame
+from the tree_eco function and a plot from the plot_tree_eco function.
 }
 \examples{
 f <- system.file("extdata", "Kasparov.gz", package = "bigchess")
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE,ignore.other.games = TRUE,stat.moves = FALSE, add.tags = "ECO")
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE, ignore.other.games = TRUE,
+               stat.moves = FALSE, add.tags = "ECO")
 # Analyze 20 best ECO Kasparov openings:
-bo <- browse_eco_opening(subset(df,grepl("Kasparov",White)),20)
+bo <- browse_eco_opening(subset(df, grepl("Kasparov", White)), 20)
+
 }

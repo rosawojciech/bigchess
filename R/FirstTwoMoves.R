@@ -1,9 +1,10 @@
 #' Example dataset
 #'
-#' A dataset containing 10,894 results after first two moves in 2,395,869 high-quality chess games played over the board by players with ELO > 2000.
+#' A dataset containing 10,894 results after first two moves in 2,395,869
+#' high-quality chess games played over the board by players with ELO > 2000.
 #' Source data OTB-HQ.7z downloaded from:
-#' https://sourceforge.net/projects/codekiddy-chess/
-#' and converted to PGN in SCID software.
+#' https://sourceforge.net/projects/codekiddy-chess/ and converted to PGN in
+#' SCID software.
 #' \itemize{
 #'   \item Result:
 #'   \item W1: White first move

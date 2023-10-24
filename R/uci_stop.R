@@ -1,22 +1,21 @@
-#' Sending command stop for chess engine
+#' Send the 'stop' command to a chess engine
 #'
-#' Sending command stop for chess engine. Info about stop command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-#' stop calculating as soon as possible, don't forget the "bestmove" and possibly the "ponder" token when finishing the search
-#' @param engine engine object
-#' @return engine object
+#' This function sends the 'stop' command to a UCI compatible chess engine.
 #'
-#' @examples
-#'\donttest{
-#' # Linux (make sure you have executable permission):
-#' engine_path <- "./stockfish_10_x64"
-#' # Windows
-#' # engine_path <- "./stockfish_10_x64.exe"
-#' e <- uci_engine(engine_path)
-#' e <- uci_go(depth = 100)
-#' Sys.sleep(1)
-#' e <- uci_stop(e)
-#' uci_quit(e)}
+#' @details The 'stop' command is used to halt the chess engine's calculations
+#'   as soon as possible. For more details see the [UCI
+#'   protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html).
+#'
+#' @param engine An engine handler created by [bigchess::uci_engine()].
+#'
+#' @return An updated engine handler.
+#'
+#' @inherit uci_cmd seealso
+#' @inherit uci_cmd examples
+#'
 #' @export
-uci_stop <- function(engine){
-  return(uci_cmd(engine,"stop"))
+
+uci_stop <- function(engine) {
+  # Send 'stop' command to the chess engine
+  return(uci_cmd(engine, "stop"))
 }

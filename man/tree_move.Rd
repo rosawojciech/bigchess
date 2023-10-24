@@ -2,27 +2,43 @@
 % Please edit documentation in R/tree_move.R
 \name{tree_move}
 \alias{tree_move}
-\title{Compute tree for a given move}
+\title{Compute a Move Tree}
 \usage{
 tree_move(df, move)
 }
 \arguments{
-\item{df}{data frame containg move and Result column from pgn function or data frame containing aggregated data from such df (containg columns: Result, W1, B1, W2, ..., WN, BN, Freq)}
+\item{df}{A data frame containing the 'Move' and 'Result' columns. This can
+either be from the pgn function or an aggregated data frame from such df
+(containing columns: Result, W1, B1, W2, ..., WN, BN, Freq).}
 
-\item{move}{character indicating which move should be browsed, example "W1"}
+\item{move}{A character string indicating which move should be analyzed. For
+example, "W1".}
 }
 \value{
-Data frame containg White_score (White winning percent), Draws_percent, Black_score and N (number of games). Sorted by power of move (White_score times N which describes popularity and score of move) descending.
+A data frame containing 'White_score' (White's winning percentage),
+'Draws_percent' (draw percentage), 'Black_score' (Black's winning
+percentage), and 'N' (number of games). The data frame is sorted by the
+power of the move (White_score * N), which describes the popularity and
+score of the move, in descending order.
 }
 \description{
-Compute tree for a given move (frequencies and winning percent)
+This function computes a tree for a given chess move, calculating the
+frequencies and winning percentages.
+}
+\details{
+The function takes a data frame with a 'Move' and 'Result' column,
+where 'Move' represents a specific move in the game and 'Result' denotes
+the game result ('1-0' for White win, '1/2-1/2' for draw, '0-1' for Black
+win). The function aggregates the data to calculate the winning percentages
+and frequencies for each move.
 }
 \examples{
 f <- system.file("extdata", "Kasparov.gz", package = "bigchess")
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE,stat.moves = FALSE)
-# Analyze best answers to 1. e4 in Kasparov games (both white and black)
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE, stat.moves = FALSE)
+# Analyze best responses to 1. e4 in Kasparov games (both white and black)
 tree_move(subset(df,W1=="e4"),move = "B1")
 # Analyze openings in aggregated data
 tree_move(FirstTwoMoves,"W1")
+
 }

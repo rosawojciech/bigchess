@@ -1,11 +1,21 @@
-#' Sending command ucinewgame for chess engine
+#' Send the 'ucinewgame' command to a chess engine
 #'
-#' Sending command ucinewgame for chess engine. Info about ucinewgame command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-#' this is sent to the engine when the next search (started with "position" and "go") will be from a different game. This can be a new game the engine should play or a new game it should analyse but also the next position from a testsuite with positions only. If the GUI hasn't sent a "ucinewgame" before the first "position" command, the engine shouldn't expect any further ucinewgame commands as the GUI is probably not supporting the ucinewgame command. So the engine should not rely on this command even though all new GUIs should support it. As the engine's reaction to "ucinewgame" can take some time the GUI should always send "isready" after "ucinewgame" to wait for the engine to finish its operation.
-#' @param engine engine object
-#' @return engine object
+#' This function sends the 'ucinewgame' command to a chess engine.
+#'
+#' @details The 'ucinewgame' command is used to inform the chess engine that the
+#'   next search will be from a different game. For more details see the [UCI
+#'   protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html).
+#'
+#' @param engine An engine handler created by [bigchess::uci_engine()].
+#'
+#' @return An updated engine handler.
+#'
+#' @inherit uci_cmd seealso
+#' @inherit uci_cmd examples
 #'
 #' @export
-uci_ucinewgame <- function(engine){
-  return(uci_cmd(engine,"ucinewgame"))
+
+uci_ucinewgame <- function(engine) {
+  # Send 'ucinewgame' command to the chess engine
+  return(uci_cmd(engine, "ucinewgame"))
 }
