@@ -38,46 +38,61 @@ utils::globalVariables(c("LAN"))
 #'  )
 #' }
 #' @export
-analyze_game <- function (engine, san = NULL, lan = NULL, quiet = FALSE, ...) {
+analyze_game <- function(engine, san = NULL, lan = NULL, quiet = FALSE, ...) {
+  # Initialize the UCI engine
   if (is.character(engine))
     e <- uci_engine(path = engine)
-  else e <- engine
+  else
+    e <- engine
+
+  # Convert SAN to LAN notation if provided
   if (!is.null(san))
     lan <- san2lan(san)
+
+  # Convert LAN to SAN notation if provided
   if (!is.null(lan))
     san <- lan2san(lan)
 
   P <- list()
 
+  # Split LAN notation into individual moves
   guci <- lan
-  gucil <- strsplit(guci," ")[[1]]
+  gucil <- strsplit(guci, " ")[[1]]
 
-  gsan <- strsplit(gsub("[0-9]+\\. ","",san)," ")[[1]]
-  for(i in 1: length(gucil))
-  {
+  # Split SAN notation into individual moves
+  gsan <- strsplit(gsub("[0-9]+\\. ", "", san), " ")[[1]]
+
+  for (i in 1:length(gucil)) {
     t <- list()
     t$curmove_lan <- gucil[i]
     t$curmove_san <- gsan[i]
-    t$curpos_lan <- paste0(gucil[1:i],collapse = " ")
+    t$curpos_lan <- paste0(gucil[1:i], collapse = " ")
     t$curpos_san <- lan2san(t$curpos_lan)
-    if(nrow(subset(bigchess::eco,LAN == t$curpos_lan))==0){
+
+    # Check if the current position is in the opening book
+    if (nrow(subset(bigchess::eco, LAN == t$curpos_lan)) == 0) {
       e <- uci_position(e, moves = t$curpos_lan)
       e <- uci_go(e, ...)
       t$ucilog <- uci_read(e)$temp
-      t$score <-  uci_parse(t$ucilog, "score")
-      if(i %% 2) t$score <- -t$score
+      t$score <- uci_parse(t$ucilog, "score")
+      if (i %% 2) t$score <- -t$score
       t$bestmove <- uci_parse(t$ucilog)
       t$bestline_lan <- uci_parse(t$ucilog, "bestline")
-      l2s <- lan2san(paste(t$curpos_lan,t$bestline_lan))
-      t$bestline_san <- substr(l2s,nchar(t$curpos_san)+2,nchar(l2s))
-      t$bestmove_san <- strsplit(gsub("[0-9]+\\. ","",t$bestline_san)," ")[[1]][1]
+      l2s <- lan2san(paste(t$curpos_lan, t$bestline_lan))
+      t$bestline_san <- substr(l2s, nchar(t$curpos_san) + 2, nchar(l2s))
+      t$bestmove_san <- strsplit(gsub("[0-9]+\\. ", "", t$bestline_san), " ")[[1]][1]
       t$comment <- ""
+    } else {
+      t$comment <- "book"
     }
-    else{ t$comment <- "book"}
+
     P[[i]] <- t
-    if(!quiet) message(paste("Move",i,Sys.time()))
+    if (!quiet) message(paste("Move", i, Sys.time()))
   }
+
+  # Quit the UCI engine
   uci_quit(e)
-  if(!quiet) message("Done!")
+
+  if (!quiet) message("Done!")
   return(P)
 }
