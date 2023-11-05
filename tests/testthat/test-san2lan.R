@@ -4,7 +4,7 @@ test_that("san2lan correctly converts SAN to LAN", {
 })
 
 test_that("san2lan handles empty input", {
-  expect_error(san2lan(""), "")
+  expect_equal(san2lan(""), "")
 })
 
 test_that("san2lan handles non-standard input", {

@@ -38,7 +38,7 @@ position.move <- function(position, r1, c1, r2, c2, p = NA) {
   position[r2, c2] <- position[r1, c1]
   position[r1, c1] <- 0
 
-  # Check for castling move
+  # Castling
   if (abs(p1) == 6 & abs(c1 - c2) > 1) {
     # Short castling
     if (c2 == 7) {
@@ -55,16 +55,19 @@ position.move <- function(position, r1, c1, r2, c2, p = NA) {
     }
   }
 
-  # Check for en passant move
-  if (abs(p1) == 1 & abs(c1 - c2) > 0 & p2 == 0) {
-    # Remove opponent's pawn for en passant
-    position[r1, c2] <-0
-  }
+  # Special pawn moves
+  if (abs(p1) == 1) {
+    # En passant
+    if (abs(c1 - c2) > 0 & p2 == 0) {
+      # Remove opponent's pawn for en passant
+      position[r1, c2] <-0
+    }
 
-  # Check for promotion
-  if (!is.na(p)) {
-    # Change pawn to specified piece for promotion
-    position[r2, c2] <- p * p1
+    # Promotion
+    if (!is.na(p)) {
+      # Change pawn to specified piece for promotion
+      position[r2, c2] <- p * p1
+    }
   }
 
   # Return updated board state after move

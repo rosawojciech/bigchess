@@ -53,7 +53,7 @@ lan2san <- function(movetext.lan) {
     position <- position.move(position, r1, c1, r2, c2, p)
 
     # Check for check or checkmate and append appropriate symbol to SAN movetext
-    if (is.check(position, sign(p1))) {
+    if (is_check_cpp(position, sign(p1))) {
       if (is.mate(position, sign(p1))) {
         cursan <- paste0(cursan, "# ")
       } else {

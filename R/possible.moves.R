@@ -42,7 +42,7 @@ possible.moves <- function(position, r1, c1) {
         tmpp <- position.move(position, r1, c1, rslt[ff, 1], rslt[ff, 2])
 
         # If this move doesn't put our own king in check
-        if(!is.check(tmpp, sign(-p1))) {
+        if(!is_check_cpp(tmpp, sign(-p1))) {
           # Add this move to possible moves
           psmv <- rbind(psmv, rslt[ff, ])
         }

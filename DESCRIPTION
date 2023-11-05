@@ -6,7 +6,9 @@ Author: Wojciech Rosa
 Maintainer: Wojciech Rosa <w.rosa@pollub.pl>
 Description: Provides functions for reading *.PGN files with more than one game, including large files without copying it into RAM (using 'ff' package or 'RSQLite' package). Handle chess data and chess aggregated data, count figure moves statistics, create player profile, plot winning chances, browse openings. Set of functions of R API to communicate with UCI-protocol based chess engines.
 License: GPL-3
-Imports: processx
+LinkingTo: Rcpp
+Imports: processx,
+    Rcpp
 Suggests:
     cli,
     ff,

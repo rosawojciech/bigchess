@@ -23,7 +23,7 @@
 #' checking.moves(position = position, r1 = 1, c1 = 2)
 checking.moves <- function(position, r1, c1) {
   p1 <- position[r1, c1]       # Get the piece at the specified position
-  ap1 <- abs(p1)              # Get the absolute value of the piece
+  ap1 <- abs(p1)               # Get the absolute value of the piece
   pm <- matrix(ncol = 2)[-1, ] # Initialize the potential moves matrix
 
   # Check for rook and queen
@@ -39,8 +39,9 @@ checking.moves <- function(position, r1, c1) {
 
   # Check for bishop and queen
   if (ap1 %in% c(2, 5)) {
+    # Diagonal 1
     d1rc <- diag1[r1, c1]
-    spd1 <- split(position, diag1)[[as.character(d1rc)]]
+    spd1 <- position[diag1 == d1rc]
     if (length(spd1) > 1) {
       md1rc <- min(d1rc, 0)
       is1 <- internal(spd1, c1 + md1rc)
@@ -48,8 +49,9 @@ checking.moves <- function(position, r1, c1) {
         pm <- rbind(pm, cbind(r1 + is1 - c1 - md1rc, is1 - md1rc))
     }
 
+    # Diagonal 2
     d2rc <- diag2[r1, c1]
-    spd2 <- split(position, diag2)[[as.character(diag2[r1, c1])]]
+    spd2 <- position[diag2 == d2rc]
     if (length(spd2) > 1) {
       md2rc <- min(d2rc, 0)
       is2 <- internal(spd2, c1 + md2rc)

@@ -54,7 +54,6 @@ san.move2move <- function(position, san.move, p) {
              c2 <- cn[sm[1]]
              wp <- which(position == p, arr.ind = TRUE)
              wpp <- matrix(wp[wp[, 2] == c2, ], ncol = 2)
-
              for (fr in 1:nrow(wpp)) {
                if (possible.move(position, wpp[fr, 1], wpp[fr, 2], r2, c2)) break()
              }
@@ -74,7 +73,6 @@ san.move2move <- function(position, san.move, p) {
              c2 <- cn[sm[2]]
              fig <- figs[casefold(sm[1])] * p
              wp <- which(position == fig, arr.ind = TRUE)
-
              for (fr in 1:nrow(wp)) {
                if (possible.move(position, wp[fr, 1], wp[fr, 2], r2, c2)) break()
              }
@@ -88,7 +86,6 @@ san.move2move <- function(position, san.move, p) {
              fig <- figs[casefold(sm[1])] * p
              wp <- which(position == fig, arr.ind = TRUE)
              wpp <- matrix(wp[wp[, 2] == c1, ], ncol = 2)
-
              for (fr in 1:nrow(wpp)) {
                if (possible.move(position, wpp[fr, 1], c1, r2, c2)) break()
              }
@@ -103,7 +100,6 @@ san.move2move <- function(position, san.move, p) {
              fig <- figs[casefold(sm[1])] * p
              wp <- which(position == fig, arr.ind = TRUE)
              wpp <- matrix(wp[wp[, 1] == r1, ], ncol = 2)
-
              for (fr in 1:nrow(wpp)) {
                if (possible.move(position, r1, wpp[fr, 2], r2, c2)) break()
              }

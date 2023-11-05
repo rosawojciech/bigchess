@@ -20,25 +20,31 @@
 san2lan <- function(movetext.san) {
   # Initialize variables
   tmpr <- strsplit(cleanup_san(movetext.san), " ")[[1]]
-  curlan <- ""
   position <- position.start()
   p <- 1  # Current player move (1 = white)
 
-  for (ft in 1:length(tmpr)) {
+  # Use lapply instead of a for-loop
+  results <- lapply(tmpr, function(ft) {
     # Parse SAN move
-    smm <- san.move2move(position, san.move = tmpr[ft], p)
+    smm <- san.move2move(position, san.move = ft, p)
     r1 <- smm[1]
     c1 <- smm[2]
     r2 <- smm[3]
     c2 <- smm[4]
     pr <- smm[5]
-    curlan <- paste0(curlan, move2lan(r1, c1, r2, c2, pr), " ")
+    lan <- move2lan(r1, c1, r2, c2, pr)
 
     # Update position
-    position <- position.move(position, r1, c1, r2, c2, pr)
+    position <<- position.move(position, r1, c1, r2, c2, pr)
     # Change side
-    p <- -p
-  }
+    p <<- -p
+
+    return(lan)
+  })
+
+  # Combine the results into a single string
+  curlan <- paste(unlist(results), collapse = " ")
 
   return(trimws(curlan))
 }
+
