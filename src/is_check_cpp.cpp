@@ -28,14 +28,20 @@ using namespace Rcpp;
 //' is_check_cpp(position, 1)
 // [[Rcpp::export]]
 bool is_check_cpp(NumericMatrix position, int p) {
-   // Locate the king
-   int king;
-   for (int i = 0; i < position.size(); i++) {
-     if (position[i] == -p*6) {
-       king = i;
-       break;
-     }
-   }
+  // Locate the king
+  int king = -1;
+  for (int i = 0; i < position.size(); i++) {
+    if (position[i] == -p*6) {
+      king = i;
+      break;
+    }
+  }
+
+  // If king is still -1, it was not found
+  if (king == -1) {
+    // Handle error
+    throw std::runtime_error("King not found");
+  }
 
    // Check for attacking enemy pawns
    int pawn_positions[2][2] = {{-1, -1}, {1, -1}};
