@@ -27,7 +27,7 @@ is.check <- function(position, p) {
   king <- arrayInd(match(-p*6, position), .dim = dim(position))
 
   # Check for attacking enemy pawns
-  pawn_positions <- matrix(c(-1, -1, 1, -1), ncol = 2) * -p
+  pawn_positions <- matrix(c(p, p, -p, p), ncol = 2)
   for (i in 1:nrow(pawn_positions)) {
     x <- king[1] + pawn_positions[i, 1]
     y <- king[2] + pawn_positions[i, 2]

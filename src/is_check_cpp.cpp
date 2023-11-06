@@ -43,19 +43,18 @@ bool is_check_cpp(NumericMatrix position, int p) {
   // Print the king's position and value
   //std::cout << "King is at position (" << king / 8 << ", " << king % 8 << ") with value " << position(king / 8, king % 8) << std::endl;
 
-   // Check for attacking enemy pawns
-   int pawn_positions[2][2] = {{-1, -1}, {1, -1}};
-   pawn_positions[0][0] *= -p;
-   pawn_positions[1][0] *= -p;
+  // Check for attacking enemy pawns
+  int pawn_positions[2][2] = {{p, -p}, {p, p}};
 
-   for (int i = 0; i < 2; i++) {
-     int x = king / 8 + pawn_positions[i][0];
-     int y = king % 8 + pawn_positions[i][1];
-     if (x >= 0 && x < 8 && y >= 0 && y < 8 && position(x, y) == p) {
-       //std::cout << "King is in check by a pawn at position (" << x << ", " << y << ") with value " << position(x, y) << std::endl;
-       return true;
-     }
-   }
+  for (int i = 0; i < 2; i++) {
+    int x = king / 8 + pawn_positions[i][0];
+    int y = king % 8 + pawn_positions[i][1];
+    if (x >= 0 && x < 8 && y >= 0 && y < 8 && position(x, y) == p) {
+      //std::cout << "King is in check by a pawn at position (" << x << ", " << y << ") with value " << position(x, y) << std::endl;
+      return true;
+    }
+  }
+
 
    // Check for attacking enemy knights
    int knight_positions[8][2] = {{-2, -1}, {-2, 1}, {2, -1}, {2, 1}, {-1, -2}, {-1, 2}, {1, -2}, {1, 2}};
