@@ -5,6 +5,36 @@ test_that("is_check_cpp returns correct values", {
   # No check
   expect_false(is_check_cpp(position, 1)) # Black is not in check
   expect_false(is_check_cpp(position, -1)) # White is not in check
+  position <- matrix(
+    data = rep(0, times = 64),
+    ncol = 8,
+    nrow = 8,
+    dimnames = list(8:1, letters[1:8])
+  )
+  position[8, 7] <- 6
+  position[6, 6] <- -6
+  position[5, 7] <- 1
+  expect_false(is_check_cpp(position, 1)) # Black is not in check
+  position <- matrix(
+    data = rep(0, times = 64),
+    ncol = 8,
+    nrow = 8,
+    dimnames = list(8:1, letters[1:8])
+  )
+  position[5, 5] <- -6
+  position[8, 5] <- 6
+  position[4, 7] <- -1
+  expect_false(is_check_cpp(position, -1)) # White is not in check
+  position <- matrix(
+    data = rep(0, times = 64),
+    ncol = 8,
+    nrow = 8,
+    dimnames = list(8:1, letters[1:8])
+  )
+  position[4, 5] <- 6
+  position[1, 5] <- -6
+  position[5, 7] <- 1
+  expect_false(is_check_cpp(position, 1)) # Black is not in check
 
   # White is in check
   position[5,5] <- -5 # Place black queen at e4

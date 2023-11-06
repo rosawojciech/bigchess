@@ -2,36 +2,33 @@
 using namespace Rcpp;
 
 //' @name is_check_cpp
-//' @title Check if a king is in check
+//' @title Test if a king is in check
 //'
-//' @description This function checks if a king is in check. It does this by
-//'   checking if any of the opponent's pieces can move to the square currently
-//'   occupied by the king.
+//' @description This function tests if a king is in check.
 //'
-//' @details The function takes into account the current state of the game and
-//'   the color of the king in question. It then checks all possible moves of
-//'   the opponent's pieces to see if any could capture the king.
+//' @details The function looks only at squares from which enemy pieces could
+//'   attack the king based on the king's current position. If an attacking
+//'   enemy piece is found in one of these squares, the function returns `TRUE`.
 //'
-//' @param position A matrix representing the current state of the chess board.
-//' @param p An integer indicating the color of the king to check (1 for white,
+//' @param position An 8 x 8 matrix representing the current position.
+//' @param p An integer indicating the color of the enemy pieces (1 for white,
 //'   -1 for black).
 //'
-//' @return A boolean value indicating whether the king is in check (TRUE) or
-//'   not (FALSE).
+//' @return A Boolean indicating if the king is in check.
 //'
 //' @export
 //'
 //' @examples
 //' # Initialize a chess board
 //' position <- position.start()
-//' # Check if the white king is in check
-//' is_check_cpp(position, 1)
+//' # Is the white king in check?
+//' is_check_cpp(position, -1)
 // [[Rcpp::export]]
 bool is_check_cpp(NumericMatrix position, int p) {
   // Locate the king
   int king = -1;
   for (int i = 0; i < position.size(); i++) {
-    if (position[i] == -p*6) {
+    if (position(i / 8, i % 8) == -p*6) {
       king = i;
       break;
     }
@@ -40,8 +37,11 @@ bool is_check_cpp(NumericMatrix position, int p) {
   // If king is still -1, it was not found
   if (king == -1) {
     // Handle error
-    throw std::runtime_error("King not found");
+    throw std::runtime_error("In is_check_cpp: king not found.");
   }
+
+  // Print the king's position and value
+  //std::cout << "King is at position (" << king / 8 << ", " << king % 8 << ") with value " << position(king / 8, king % 8) << std::endl;
 
    // Check for attacking enemy pawns
    int pawn_positions[2][2] = {{-1, -1}, {1, -1}};
@@ -51,7 +51,8 @@ bool is_check_cpp(NumericMatrix position, int p) {
    for (int i = 0; i < 2; i++) {
      int x = king / 8 + pawn_positions[i][0];
      int y = king % 8 + pawn_positions[i][1];
-     if (x >= 0 && x < 8 && y >= 0 && y < 8 && position(y, x) == p) {
+     if (x >= 0 && x < 8 && y >= 0 && y < 8 && position(x, y) == p) {
+       //std::cout << "King is in check by a pawn at position (" << x << ", " << y << ") with value " << position(x, y) << std::endl;
        return true;
      }
    }
@@ -62,7 +63,8 @@ bool is_check_cpp(NumericMatrix position, int p) {
    for (int i = 0; i < 8; i++) {
      int x = king / 8 + knight_positions[i][0];
      int y = king % 8 + knight_positions[i][1];
-     if (x >= 0 && x < 8 && y >= 0 && y < 8 && position(y, x) == p*3) {
+     if (x >= 0 && x < 8 && y >= 0 && y < 8 && position(x, y) == p*3) {
+       //std::cout << "King is in check by a knight at position (" << x << ", " << y << ") with value " << position(x, y) << std::endl;
        return true;
      }
    }
@@ -73,11 +75,12 @@ bool is_check_cpp(NumericMatrix position, int p) {
    for (int i = 0; i < 4; i++) {
      int x = king / 8 + rook_directions[i][0];
      int y = king % 8 + rook_directions[i][1];
-     while (x >= 0 && x < 8 && y >= 0 && y < 8 && position(y, x) == 0) {
+     while (x >= 0 && x < 8 && y >= 0 && y < 8 && position(x, y) == 0) {
        x += rook_directions[i][0];
        y += rook_directions[i][1];
      }
-     if (x >= 0 && x < 8 && y >= 0 && y < 8 && (position(y, x) == p*4 || position(y, x) == p*5)) {
+     if (x >= 0 && x < 8 && y >= 0 && y < 8 && (position(x, y) == p*4 || position(x, y) == p*5)) {
+       //std::cout << "King is in check by a rook or queen at position (" << x << ", " << y << ") with value " << position(x, y) << std::endl;
        return true;
      }
    }
@@ -89,8 +92,9 @@ bool is_check_cpp(NumericMatrix position, int p) {
      int x = king / 8 + bishop_directions[i][0];
      int y = king % 8 + bishop_directions[i][1];
      while (x >= 0 && x < 8 && y >= 0 && y < 8) {
-       if (position(y, x) != 0) {
-         if (position(y, x) == p*2 || position(y, x) == p*5) {
+       if (position(x, y) != 0) {
+         if (position(x, y) == p*2 || position(x, y) == p*5) {
+           //std::cout << "King is in check by a bishop or queen at position (" << x << ", " << y << ") with value " << position(x, y) << std::endl;
            return true;
          }
          break;

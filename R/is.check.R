@@ -9,7 +9,7 @@
 #'   opponent's pieces to see if any could capture the king.
 #'
 #' @param position A matrix representing the current state of the chess board.
-#' @param p An integer indicating the color of the king to check (1 for white,
+#' @param p An integer indicating the color of the enemy pieces (1 for white,
 #'   -1 for black).
 #'
 #' @return A boolean value indicating whether the king is in check (TRUE) or not
@@ -21,7 +21,7 @@
 #' # Initialize a chess board
 #' position <- position.start()
 #' # Check if the white king is in check
-#' is.check(position, 1)
+#' is.check(position, -1)
 is.check <- function(position, p) {
   # Locate the king
   king <- arrayInd(match(-p*6, position), .dim = dim(position))

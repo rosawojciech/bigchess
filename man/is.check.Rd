@@ -9,7 +9,7 @@ is.check(position, p)
 \arguments{
 \item{position}{A matrix representing the current state of the chess board.}
 
-\item{p}{An integer indicating the color of the king to check (1 for white,
+\item{p}{An integer indicating the color of the enemy pieces (1 for white,
 -1 for black).}
 }
 \value{
@@ -30,5 +30,5 @@ opponent's pieces to see if any could capture the king.
 # Initialize a chess board
 position <- position.start()
 # Check if the white king is in check
-is.check(position, 1)
+is.check(position, -1)
 }

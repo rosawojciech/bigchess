@@ -2,33 +2,30 @@
 % Please edit documentation in R/RcppExports.R
 \name{is_check_cpp}
 \alias{is_check_cpp}
-\title{Check if a king is in check}
+\title{Test if a king is in check}
 \usage{
 is_check_cpp(position, p)
 }
 \arguments{
-\item{position}{A matrix representing the current state of the chess board.}
+\item{position}{An 8 x 8 matrix representing the current position.}
 
-\item{p}{An integer indicating the color of the king to check (1 for white,
+\item{p}{An integer indicating the color of the enemy pieces (1 for white,
 -1 for black).}
 }
 \value{
-A boolean value indicating whether the king is in check (TRUE) or
-not (FALSE).
+A Boolean indicating if the king is in check.
 }
 \description{
-This function checks if a king is in check. It does this by
-checking if any of the opponent's pieces can move to the square currently
-occupied by the king.
+This function tests if a king is in check.
 }
 \details{
-The function takes into account the current state of the game and
-the color of the king in question. It then checks all possible moves of
-the opponent's pieces to see if any could capture the king.
+The function looks only at squares from which enemy pieces could
+attack the king based on the king's current position. If an attacking
+enemy piece is found in one of these squares, the function returns \code{TRUE}.
 }
 \examples{
 # Initialize a chess board
 position <- position.start()
-# Check if the white king is in check
-is_check_cpp(position, 1)
+# Is the white king in check?
+is_check_cpp(position, -1)
 }
