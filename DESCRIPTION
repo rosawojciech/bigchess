@@ -11,6 +11,7 @@ Imports: processx,
     Rcpp
 Suggests:
     cli,
+    data.table,
     ff,
     ffbase,
     RSQLite,

@@ -12,13 +12,18 @@ is.mate(position, p)
 \item{p}{The color of the king to check (1 for white, -1 for black).}
 }
 \value{
-A Boolean value indicating whether the king is in checkmate (TRUE) or not (FALSE).
+A Boolean value indicating whether the king is in checkmate (TRUE) or
+not (FALSE).
 }
 \description{
-This function determines whether a specified king is in checkmate. It does this by first checking if the king is in check, and then verifying if there are no legal moves left for the king.
+This function determines whether a specified king is in checkmate. It does
+this by first checking if the king is in check, and then verifying if there
+are no legal moves left for the king.
 }
 \details{
-The function takes into account the current state of the game and the color of the king in question. It then checks all possible moves of the king's pieces to see if any could prevent a checkmate.
+The function takes into account the current state of the game and
+the color of the king in question. It then checks all possible moves of the
+king's pieces to see if any could prevent a checkmate.
 }
 \examples{
 # Initialize a chess board
