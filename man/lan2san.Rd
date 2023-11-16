@@ -2,19 +2,29 @@
 % Please edit documentation in R/lan2san.R
 \name{lan2san}
 \alias{lan2san}
-\title{Movetext conversion from LAN to SAN}
+\title{Convert LAN movetext to SAN}
 \usage{
 lan2san(movetext.lan)
 }
 \arguments{
-\item{movetext.lan}{movetext string in long algebraic notation (LAN), but without comments, variants etc.}
+\item{movetext.lan}{A string of movetext in UCI long algebraic notation
+(LAN).}
 }
 \value{
-movetext in standard algebraic notation
+A string representing the movetext in standard algebraic notation.
 }
 \description{
-Convert LAN movetext (long algebraic notation used by chess engines) to SAN movetext (standard algebraic notation required by FIDE)
+This function converts UCI LAN movetext (long algebraic notation
+used by \href{https://wbec-ridderkerk.nl/html/UCIProtocol.html}{UCI-compatible}
+chess engines) to SAN movetext (standard algebraic notation).
+}
+\details{
+The \code{movetext.lan} argument should be a string of chess moves in UCI
+long algebraic notation that is free of any comments, annotations, etc. The
+function returns a new string with the same moves converted to standard
+algebraic notation.
 }
 \examples{
 lan2san("e2e4 c7c5")
+
 }

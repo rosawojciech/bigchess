@@ -1,31 +1,39 @@
-#' Checking if chess engine is ready
+#' Check if a chess engine is ready
 #'
-#' Checking if chess engine is ready - sending command isready and parsing GUI until readyok is obtained. Info about isready command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-#' This is used to synchronize the engine with the GUI. When the GUI has sent a command or multiple commands that can take some time to complete, this command can be used to wait for the engine to be ready again or to ping the engine to find out if it is still alive. E.g. this should be sent after setting the path to the tablebases as this can take some time. This command is also required once before the engine is asked to do any search to wait for the engine to finish initializing. This command must always be answered with "readyok" and can be sent also when the engine is calculating in which case the engine should also immediately answer with "readyok" without stopping the search.
+#' This function sends the UCI 'isready' command to a chess engine.
 #'
-#' @param engine engine object
-#' @return engine object
+#' @details The 'isready' command is used to synchronize the engine with the
+#'   GUI. When the GUI has sent commands that take time to complete,
+#'   `uci_isready()` can be used to wait for the engine to be ready again or to
+#'   ping the engine to find out if it is still alive. See the [UCI
+#'   protocol](http://wbec-ridderkerk.nl/html/UCIProtocol.html) for more
+#'   details.
 #'
-#' @examples
-#'\donttest{
-#' # Linux (make sure you have executable permission):
-#' engine_path <- "./stockfish_10_x64"
-#' # Windows
-#' # engine_path <- "./stockfish_10_x64.exe"
-#' e <- uci_engine(engine_path)
-#' e <- uci_isready(e)
-#' uci_quit(e)
-#' # Using pipe '%>%' from magrittr:
-#' require(magrittr)
-#' uci_engine(engine_path) %>% uci_isready() %>% uci_quit()}
+#' @param engine An engine handler created by [bigchess::uci_engine()].
+#'
+#' @return An updated engine handler.
+#'
+#' @inherit uci_cmd seealso
+#' @inherit uci_cmd examples
+#'
 #' @export
-uci_isready <- function(engine){
-  uci_cmd(engine,"isready")
+uci_isready <- function(engine) {
+  # Send 'isready' command to the engine
+  uci_cmd(engine, "isready")
+
+  # Loop until 'readyok' is received from the engine
   isr <- ""
-  while(isr!="readyok") {
+  while (isr != "readyok") {
+    # Read the latest output from the engine
     engine <- uci_read(engine)
-    tisr <- tail(engine$temp,n = 1)
-    if(length(tisr)>0) if(!is.na(tisr) & !is.null(tisr)) isr <- tisr
+    tisr <- tail(engine$temp, n = 1)
+
+    # If the last message is valid, update isr
+    if (length(tisr) > 0 && !is.na(tisr) && !is.null(tisr)) {
+      isr <- tisr
+    }
   }
+
+  # Return the updated engine object
   return(engine)
 }

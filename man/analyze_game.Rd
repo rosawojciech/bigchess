@@ -2,38 +2,59 @@
 % Please edit documentation in R/analyze_game.R
 \name{analyze_game}
 \alias{analyze_game}
-\title{Analyze game}
+\title{Analyze a chess game}
 \usage{
 analyze_game(engine, san = NULL, lan = NULL, quiet = FALSE, ...)
 }
 \arguments{
-\item{engine}{engine path or engine object from uci_engine()}
+\item{engine}{Either a character string giving the path to a chess engine, or
+an engine handler created by \code{\link[=uci_engine]{uci_engine()}}.}
 
-\item{san}{movetext in short algebraic notation, default NULL}
+\item{san}{(default = \code{NULL}) A character string giving a series of chess
+moves in short algebraic notation.}
 
-\item{lan}{movetext in long algebraic notation, default NULL}
+\item{lan}{(default = \code{NULL}) A character string giving a series of chess
+moves in UCI long algebraic notation.}
 
-\item{quiet}{boolean, hide system messages? Default FALSE}
+\item{quiet}{(default = \code{FALSE}) A Boolean. Hide system messages?}
 
-\item{...}{further arguments passed directly to uci_go(), i.e. depth = 10}
+\item{...}{Further arguments passed to \code{\link[=uci_go]{uci_go()}}.}
 }
 \value{
-list containg analyze_position() result (score and bestlines) for each move in the game. Note that if black moves, then score is multiplied by -1.
+A list containing the results from \code{analyze_position()} for each
+position in the game.
 }
 \description{
-Analyze game using UCI engine and R API
+This function analyzes a chess game using a
+\href{https://wbec-ridderkerk.nl/html/UCIProtocol.html}{UCI-compatible} chess
+engine.
+}
+\details{
+The moves of the game may be provided in either short algebraic
+notation (SAN) or UCI long algebraic notation (LAN). Note that if it is
+black's turn, the score is multiplied by -1 so that a positive score always
+means white has the advantage, and negative always means black has the
+advantage.
 }
 \examples{
-\donttest{
-# Linux (make sure you have executable permission):
-engine_path <- "./stockfish_10_x64"
-# Windows
-# engine_path <- "./stockfish_10_x64.exe"
-g <- "1. e4 e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7"
-G <- analyze_game(engine_path,san = g ,depth = 20)
-G[[1]] # handles info about first move in the game
-G[[1]]$comment # "book"
-G[[10]]$curmove_san # "Be7"
-G[[10]]$score # 62
+# To run the example code, place a UCI-compatible chess engine in the
+# `bigchess` subdirectory `/inst/extdata/engine`, or replace the line below
+# with a valid path:
+# engine_path <- "/put/your/own/engine/path/here"
+engine_path <- find_engine()
+if(!is.null(engine_path)) {
+  san <- "1. e4 e5 2. Nf3 Nc6 3. d4 exd4 4. Bc4 Nf6 5. O-O Be7"
+  game <- analyze_game(engine_path, san = san, depth = 2)
+  game[[1]] # Analysis results for the first position
+} else {
+ message(
+   paste0(
+     'To run the examples, install a chess engine in /inst/extdata/',
+     'engine,\n or replace engine_path with the path to an engine.'
+   )
+ )
 }
+}
+\seealso{
+\code{\link[=analyze_position]{analyze_position()}}
 }

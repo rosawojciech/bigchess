@@ -2,53 +2,66 @@
 % Please edit documentation in R/read.pgn.ff.R
 \name{read.pgn.ff}
 \alias{read.pgn.ff}
-\title{Reads PGN files into ff data frame}
+\title{Reads a PGN file into an ff data frame}
 \usage{
 read.pgn.ff(con, batch.size = 10^6, ignore.other.games = F, ...)
 }
 \arguments{
-\item{con}{connection argument passed directly to readLines() function. String - the name of the file which the data are to be read from or connection object or URL.}
+\item{con}{A string with a path to a file or URL, or a connection object.}
 
-\item{batch.size}{number of lines to read in one batch, default is 10^6.}
+\item{batch.size}{(default = 10^6) An integer of the number of lines to read
+per batch.}
 
-\item{ignore.other.games}{boolean (default FALSE) if TRUE result is subset of original dataset without games with result marked as "*", i.e. ongoing games. The only one argument which is not passed directly to read.pgn function.}
+\item{ignore.other.games}{(default = FALSE) A Boolean indicating if games
+where the result is "*", (i.e. ongoing games) should be excluded.}
 
-\item{...}{further arguments passed directly to read.pgn() function (besides ignore.other.games and big.mode)}
+\item{...}{Further arguments passed to \code{read.pgn()} (excluding
+\code{ignore.other.games} and \code{big.mode}).}
 }
 \value{
-ff data frame like from read.pgn() function. Since character values are not supported in ffdf object, "Movetext" column is ommited.
+A message stating the number of games imported.
 }
 \description{
-Reads PGN files into ff data frame
+This function reads a PGN file into an ff data frame to more efficiently
+manage and analyze a large collection of chess games.
+}
+\details{
+The \code{con} argument can be a string with the path to a file to read,
+a connection object, or a URL. The function reads the PGN files in batches
+and writes them to an ff data frame. The size of the batches can be
+specified by the user.
 }
 \examples{
-\donttest{
-require(ff)
-require(ffbase)
+\dontrun{
+# Load required package
+library(ff)
+library(ffbase)
+
+# Specify file and connection
 f <- system.file("extdata", "Carlsen.gz", package = "bigchess")
-con <- gzfile(f,"rbt",encoding = "latin1")
-# options("fftempdir"="/path/"...) # if necessarily
-fdf <- read.pgn.ff(con,stat.moves = FALSE)
+con <- gzfile(f, "rbt", encoding = "latin1")
+
+# Read PGN data into ff data frame
+fdf <- read.pgn.ff(con, stat.moves = FALSE)
+
+# Query the ff data frame
+nrow(fdf) #2410
+
+# Delete the ff data frame
 delete(fdf)
-# Works with all types of connections (also gz or zip files).
-# con argument is passed directly to readLines(con,batch.size)
-# so (if total number of lines to read is greater then batch.size)
-# depending on platform use it correctly:
+
+# Example with different types of connections (also gz or zip files)
+# Connection argument is passed directly to readLines(con, batch.size)
+# So if total number of lines to read is greater than batch.size,
+# use the correct opening mode for readLines depending on platform:
+
 # Windows ('rb' opening mode for loop over readLines):
-con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"rb",encoding = "latin1")
-# con <- file("path_to_big_chess_file.pgn","rb",encoding = "latin1")
+con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),
+  "rb", encoding = "latin1")
+
 fdf <- read.pgn.ff(con)
-delete(fdf)}
-\donttest{
-# Linux/Mac OS X ('r' opening mode for loop over readLines):
-con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"r",encoding = "latin1")
-# con <- file("path_to_big_chess_file.pgn","r",encoding = "latin1")
-fdf <- read.pgn.ff(con)
-delete(fdf)}
-\donttest{
-# Windows (example of zipped file handling)
-unzf <- unzip("zipped_pgn_file.zip")
-fdf <- read.pgn.ff(file(unzf,"rb"))
+
+# Delete the ff data frame
 delete(fdf)
 }
 }

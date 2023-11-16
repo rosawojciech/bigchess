@@ -2,19 +2,107 @@
 % Please edit documentation in R/uci_debug.R
 \name{uci_debug}
 \alias{uci_debug}
-\title{Sending command debug for chess engine}
+\title{Send the 'debug' command to a chess engine}
 \usage{
 uci_debug(engine, on = TRUE)
 }
 \arguments{
-\item{engine}{engine object}
+\item{engine}{An engine handler created by \code{\link[=uci_engine]{uci_engine()}}.}
 
-\item{on}{boolean default TRUE}
+\item{on}{Boolean default TRUE}
 }
 \value{
-engine object
+An updated engine handler
 }
 \description{
-Sending command debug for chess engine. Info about debug command from http://wbec-ridderkerk.nl/html/UCIProtocol.html
-switch the debug mode of the engine on and off. In debug mode the engine should sent additional infos to the GUI, e.g. with the "info string" command, to help debugging, e.g. the commands that the engine has received etc. This mode should be switched off by default and this command can be sent any time, also when the engine is thinking.
+Turns the UCI debug mode on or off.
+}
+\details{
+In debug mode the engine sends additional information to the GUI to
+help with debugging. This mode is off by default. The command may be sent
+any time, even when the engine is thinking. For more details see the \href{http://wbec-ridderkerk.nl/html/UCIProtocol.html}{UCI Protocol}.
+}
+\examples{
+# To run the example code, place a UCI-compatible chess engine in the
+# bigchess subdirectory /inst/extdata/engine, or replace the line below with
+# a path to a local UCI-compatible chess engine:
+# engine_path <- "/put/your/own/engine/path/here"
+
+engine_path <- find_engine() # Checks to see if an engine is available
+if (!is.null(engine_path)) { # Runs examples only if an engine is available
+
+  # Examples are shown for the entire family of UCI engine functions. Run the
+  # uci_engine example first to create an engine for the other examples. Run
+  # the uci_quit example last to shut down the engine when done.
+
+  # Create an engine handler
+  engine <- uci_engine(engine_path)
+
+  # Set up a position using moves or FEN
+  engine <- uci_position(engine, moves = 'e2e4 c7c5')
+  engine <- uci_position(
+    engine,
+    fen = 'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1'
+  )
+
+  # Start calculating
+  uci_go(engine, depth = 2)
+
+  # Read and parse engine output
+  result <- uci_go(engine, depth = 2) |> uci_read()
+  ucilog <- uci_parse(result$temp)
+
+  # Send a custom command
+  engine <- uci_cmd(engine, "go depth 2")
+
+  # Stop calculations
+  engine <- uci_cmd(engine, "go depth 1000") |> uci_stop()
+
+  # Change the engine's internal parameters
+  engine <- uci_setoption(engine, name  = "Clear", value = "Hash")
+
+  # Turn debug mode on or off
+  engine <- uci_debug(engine, TRUE)
+  engine <- uci_debug(engine, FALSE)
+
+  # Register the engine
+  engine <- uci_register(engine, later = TRUE)
+  engine <- uci_register(engine, name = 'name', code = 'code')
+
+  # Send various other UCI commands to the engine
+  engine <- uci_uci(engine)
+  engine <- uci_ucinewgame(engine)
+  engine <- uci_isready(engine)
+  engine <- uci_ponderhit(engine)
+
+  # Shut down the engine
+  uci_quit(engine)
+
+} else {
+ message(
+   paste0(
+     'To run the examples, install a chess engine in /inst/extdata/',
+     'engine,\n or replace engine_path with the path to an engine.'
+   )
+ )
+}
+}
+\seealso{
+\itemize{
+\item \code{\link[=uci_cmd]{uci_cmd()}}
+\item \code{\link[=uci_debug]{uci_debug()}}
+\item \code{\link[=uci_engine]{uci_engine()}}
+\item \code{\link[=uci_go]{uci_go()}}
+\item \code{\link[=uci_isready]{uci_isready()}}
+\item \code{\link[=uci_parse]{uci_parse()}}
+\item \code{\link[=uci_ponderhit]{uci_ponderhit()}}
+\item \code{\link[=uci_position]{uci_position()}}
+\item \code{\link[=uci_quit]{uci_quit()}}
+\item \code{\link[=uci_read]{uci_read()}}
+\item \code{\link[=uci_register]{uci_register()}}
+\item \code{\link[=uci_setoption]{uci_setoption()}}
+\item \code{\link[=uci_stop]{uci_stop()}}
+\item \code{\link[=uci_uci]{uci_uci()}}
+\item \code{\link[=uci_ucinewgame]{uci_ucinewgame()}}
+}
 }

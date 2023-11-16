@@ -2,73 +2,110 @@
 % Please edit documentation in R/read.pgn.R
 \name{read.pgn}
 \alias{read.pgn}
-\title{Reads PGN files into data frame}
+\title{Read a PGN file into a data frame}
 \usage{
 read.pgn(
   con,
   add.tags = NULL,
-  n.moves = T,
+  n.moves = TRUE,
   extract.moves = 10,
-  last.move = T,
-  stat.moves = T,
-  big.mode = F,
-  quiet = F,
-  ignore.other.games = F,
-  source.movetext = F
+  last.move = TRUE,
+  stat.moves = TRUE,
+  big.mode = FALSE,
+  quiet = FALSE,
+  ignore.other.games = FALSE,
+  source.movetext = FALSE
 )
 }
 \arguments{
-\item{con}{connection argument passed directly to readLines() function. String - the name of the file which the data are to be read from or connection object or URL.}
+\item{con}{(default = NULL) A string with a path to a file or URL, or a
+connection object.}
 
-\item{add.tags}{string vector containing additional tags to be parsed.
-According to Seven Tag Roster rule:
-http://www.saremba.de/chessgml/standards/pgn/pgn-complete.htm#c8.1.1
-The STR tag pairs appear before any other tag pairs: "Event", "Site", "Date", "Round", "White", "Black" and "Result".
-Using this argument you can specify supplemental tag names, such as: Player related information, Event related information, Opening information (locale specific), Opening information (third party vendors), Time and date related information, Time control, Alternative starting positions, Game conclusion and Miscellaneous.
-Most popular: "WhiteElo", "BlackElo","ECO","SetUp" or "FEN". Case sensitive.}
+\item{add.tags}{(default = NULL) A string vector containing additional tags
+to be parsed.}
 
-\item{n.moves}{boolean (default TRUE), compute number of moves?}
+\item{n.moves}{(default = TRUE) A Boolean indicating whether to count the
+moves.}
 
-\item{extract.moves}{integer (default 10) passed to extract_moves function. Additionaly value -1 will extract all moves from movetext (not recommended for big files). Value 0 means that moves will not be extracted.}
+\item{extract.moves}{(default = 10) An integer specifying the number of moves
+to extract.}
 
-\item{last.move}{boolean (default TRUE) passed to extract_moves, ignored when extract.moves = 0}
+\item{last.move}{(default = TRUE) A Boolean  indicating whether to include
+the last move in the extracted moves.}
 
-\item{stat.moves}{boolean (default TRUE), compute moves count statistics? Could take a long time for big file.}
+\item{stat.moves}{(default = TRUE) A Boolean indicating whether to compute
+move statistics.}
 
-\item{big.mode}{boolean (default FALSE) used in read.pgn.ff function}
+\item{big.mode}{(default = FALSE) A Boolean indicating whether to use big
+mode.}
 
-\item{quiet}{boolean (default FALSE), indicating if messages should appear.}
+\item{quiet}{(default = FALSE) A Boolean indicating whether to suppress
+messages.}
 
-\item{ignore.other.games}{boolean (default FALSE) if TRUE result is subset of original dataset without games with result marked as "*", i.e. ongoing games}
+\item{ignore.other.games}{(default = FALSE) A Boolean indicating whether to
+ignore ongoing games marked with "*".}
 
-\item{source.movetext}{boolean (default FALSE, experimental!) if TRUE column with original movetext will be added}
+\item{source.movetext}{(default = FALSE) A boolean value indicating whether
+to include original movetext in the output data frame.}
 }
 \value{
-Data frame containg STR, additional tags (conditionally), Movetext, NMoves (conditionally), extracted moves (conditionally) with complete.movetext flag, figure moves count statistics (conditionally).
+The function returns a data frame that contains parsed information
+from the PGN file. The data frame includes:
+\itemize{
+\item Seven Tag Roster
+\item Additional tags (if specified)
+\item Movetext
+\item NMoves (if \code{n.moves} is TRUE)
+\item Extracted moves and a completeness flag (if \code{extract.moves} is non-zero)
+\item Figure moves count statistics (if \code{stat.moves} is TRUE)
+\item Original movetext (if \code{source.movetext} is TRUE)
+}
 }
 \description{
-Reads PGN files into data frame
+This function reads a PGN file into a data frame.
+}
+\details{
+The \code{con} argument can be a string with the path to a file to read,
+a connection object, or a URL. The function reads the PGN files and writes
+them to a data frame. Additional tags besides those in the Seven Tag Roster
+can be specified with the \code{add.tags} parameter. The function can also
+compute the number of moves, extract moves, and compute move statistics
+based on the provided arguments.
 }
 \examples{
+\dontrun{
+# Load required package
+library(bigchess)
+
+# Specify file and connection
 f <- system.file("extdata", "2016_Candidates.pgn", package = "bigchess")
+
+# Read PGN data into data frame
 df <- read.pgn(f)
-# ...successfully imported 56 games...
+}
 \donttest{
-# Example downloaded from https://www.pgnmentor.com/files.html#players and gzipped:
+# Example downloaded from https://www.pgnmentor.com/files.html#players
+# and gzipped:
 f <- system.file("extdata", "Carlsen.gz", package = "bigchess")
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE)
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE)
+
 # Fastest mode:
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE,n.moves = FALSE,extract.moves = FALSE,
-stat.moves = FALSE, ignore.other.games = FALSE)
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE, n.moves = FALSE, extract.moves = FALSE,
+  stat.moves = FALSE, ignore.other.games = FALSE)
+
 # Parse additional tags and extract all moves:
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,add.tags = c("WhiteElo", "BlackElo", "ECO"),extract.moves = -1)
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con,add.tags = c("WhiteElo", "BlackElo", "ECO"),
+  extract.moves = -1)
+
 # Example of direct downloading data from chess.com using API:
 df <- read.pgn("https://api.chess.com/pub/player/fabianocaruana/games/2013/03/pgn")
-# Warning of incomplete line could appear}
-\donttest{
+
+# Warning of incomplete line could appear
+}
+\dontrun{
 # Example of scraping all of games given user:
 user <- "fabianocaruana"
 library("rjson")
@@ -76,5 +113,6 @@ json_file <- paste0("https://api.chess.com/pub/player/",user,"/games/archives")
 json_data <- fromJSON(paste(readLines(json_file), collapse=""))
 result <- data.frame()
 for(i in json_data$archives)
-result <- rbind(result,read.pgn(paste0(i,"/pgn")))}
+result <- rbind(result, read.pgn(paste0(i, "/pgn")))
+}
 }

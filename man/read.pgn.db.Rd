@@ -2,51 +2,102 @@
 % Please edit documentation in R/read.pgn.db.R
 \name{read.pgn.db}
 \alias{read.pgn.db}
-\title{Reads PGN files into database table}
+\title{Read a PGN file into a database table}
 \usage{
 read.pgn.db(con, batch.size = 10^6, conn, table.name = "pgn", ...)
 }
 \arguments{
-\item{con}{connection argument passed directly to readLines() function. String - the name of the file which the data are to be read from or connection object or URL.}
+\item{con}{A string with a path to a file or URL, or a connection object.}
 
-\item{batch.size}{number of lines to read in one batch, default is 10^6.}
+\item{batch.size}{(default = 10^6) An integer of the number of lines to read
+per batch.}
 
-\item{conn}{connection argument created by dbConnect}
+\item{conn}{A connection created by \code{dbConnect}.}
 
-\item{table.name}{string (default "pgn"), table name, used in dbWriteTable(conn, table.name, read.pgn(batch))}
+\item{table.name}{(default = "pgn") A string with the database table's name.}
 
-\item{...}{further arguments passed directly to read.pgn() function (besides ignore.other.games and big.mode)}
+\item{...}{Further arguments passed to \code{read.pgn()} (excluding
+\code{ignore.other.games} and \code{big.mode}).}
+}
+\value{
+A message stating the number of games imported.
 }
 \description{
-Reads PGN files into database table
+This function reads a PGN file into a database table to more efficiently
+manage and analyze a large collection of chess games.
+}
+\details{
+The \code{con} argument can be a string with the path to a file to read,
+a connection object, or a URL. The function reads the PGN files in batches
+and writes them to a database table. The size of the batches and the name
+of the database table can be specified by the user.
 }
 \examples{
-\donttest{
+\dontrun{
+# Load required package
+library(RSQLite)
+
+# Specify file and connection
 f <- system.file("extdata", "Carlsen.gz", package = "bigchess")
-con <- gzfile(f,"rbt",encoding = "latin1")
-require(RSQLite)
+con <- gzfile(f, "rbt", encoding = "latin1")
+
+# Connect to SQLite database
 conn <- dbConnect(SQLite())
-read.pgn.db(con,stat.moves = FALSE,conn = conn)
+
+# Read PGN data into database
+read.pgn.db(con, stat.moves = FALSE, conn = conn)
+
+# Query the database
 dbGetQuery(conn, "SELECT COUNT(*) FROM pgn") #2410
+
+# Disconnect from the database
 dbDisconnect(conn)
-# Works with all types of connections (also gz or zip files).
-# con argument is passed directly to readLines(con,batch.size)
-# so (if total number of lines to read is greater then batch.size)
-# depending on platform use it correctly:
+
+# Example with different types of connections (also gz or zip files)
+# Connection argument is passed directly to readLines(con, batch.size)
+# So if total number of lines to read is greater than batch.size,
+# use the correct opening mode for readLines depending on platform:
+
 # Windows ('rb' opening mode for loop over readLines):
-con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"rb",encoding = "latin1")
-# con <- file("path_to_big_chess_file.pgn","rb",encoding = "latin1")
-read.pgn.db(con,conn = conn)
+con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),
+  "rb", encoding = "latin1")
+# Alternatively: con <- file("path_to_big_chess_file.pgn",
+  "rb", encoding = "latin1")
+
+# Connect to SQLite database again
+conn <- dbConnect(SQLite())
+
+read.pgn.db(con, conn = conn)
+
+# Disconnect from the database
+dbDisconnect(conn)
 }
-\donttest{
+\dontrun{
 # Linux/Mac OS X ('r' opening mode for loop over readLines):
-con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),"r",encoding = "latin1")
-# con <- file("path_to_big_chess_file.pgn","r",encoding = "latin1")
-read.pgn.db(con,conn = conn)
+con <- gzfile(system.file("extdata", "Carlsen.gz", package = "bigchess"),
+  "r", encoding = "latin1")
+# Alternatively: con <- file("path_to_big_chess_file.pgn",
+  "r", encoding = "latin1")
+
+# Connect to SQLite database again
+conn <- dbConnect(SQLite())
+
+read.pgn.db(con, conn = conn)
+
+# Disconnect from the database
+dbDisconnect(conn)
 }
-\donttest{
+\dontrun{
 # Windows (example of zipped file handling)
 unzf <- unzip("zipped_pgn_file.zip")
-read.pgn.db(con,conn = conn)
+
+# Connect to SQLite database again
+conn <- dbConnect(SQLite())
+
+read.pgn.db(unzf, conn = conn)
+
+# Disconnect from the database
+dbDisconnect(conn)
 }
+
 }

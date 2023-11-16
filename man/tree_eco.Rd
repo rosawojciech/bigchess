@@ -2,23 +2,37 @@
 % Please edit documentation in R/tree_eco.R
 \name{tree_eco}
 \alias{tree_eco}
-\title{Compute ECO tree}
+\title{Compute an ECO tree}
 \usage{
 tree_eco(df, topn = 0)
 }
 \arguments{
-\item{df}{data frame containg ECO and Result columns}
+\item{df}{A data frame containing the 'ECO' and 'Result' columns.}
 
-\item{topn}{integer, default 0, indicating how many top openings should be included, 0 means show all openings}
+\item{topn}{(default = 0) An integer indicating how many openings to include.
+Set to 0 to include all openings.}
 }
 \value{
-Data frame containg White_score (White winning percent), Draws_percent, Black_score and N (number of games). Sorted by power of ECO (White_score * N which describes popularity and score of move) descending.
+A data frame containing 'White_score' (White's winning percentage),
+'Draws_percent' (draw percentage), 'Black_score' (Black's winning
+percentage), and 'N' (number of games). The data frame is sorted by the
+power of ECO (White_score * N), descending.
 }
 \description{
-Compute ECO tree (frequencies and winning percent)
+This function creates a data frame of the outcomes of a set of chess games.
+}
+\details{
+This function takes a data frame with 'ECO' and 'Result' columns,
+where 'ECO' represents the opening code and 'Result' denotes the game
+result ('1-0' for White win, '1/2-1/2' for draw, '0-1' for Black win). The
+function aggregates the data to calculate the winning percentages and
+frequencies for each opening code.
 }
 \examples{
 f <- system.file("extdata", "Kasparov.gz", package = "bigchess")
-con <- gzfile(f,encoding = "latin1")
-df <- read.pgn(con,quiet = TRUE,stat.moves = FALSE, add.tags = "ECO")
+con <- gzfile(f, encoding = "latin1")
+df <- read.pgn(con, quiet = TRUE, stat.moves = FALSE, add.tags = "ECO")
+# Get the top 10 openings, by winning percentages
+result <- tree_eco(df, topn = 10)
+
 }
